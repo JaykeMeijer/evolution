@@ -14,8 +14,6 @@ render = Render(state)
 last_simulation_iteration = 0
 simulation_step_time = 0.1
 
-last_render_iteration = 0
-render_step_time = 1/30
 
 def setup_world():
     print("Setting up world")
