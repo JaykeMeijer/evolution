@@ -1,5 +1,5 @@
 import random
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 import pygame
 
@@ -20,7 +20,7 @@ class Beast:
 
     position: Position
 
-    def __init__(self, dna: DNA = None, position: Position = None):
+    def __init__(self, dna: DNA = None, position: Position = None, parents: Tuple["Beast"] = None):
         if dna:
             self.dna = dna
         else:
@@ -30,6 +30,10 @@ class Beast:
             self.position = position
         else:
             self.position = Position.random()
+
+        self.parents: Optional[Tuple[Beast]] = parents
+        self.children: List[Beast] = []
+
         self.rotation = random.randint(0, 360)
 
         self.brain: Brain = Brain(self.dna)
@@ -65,7 +69,9 @@ class Beast:
         if self._can_reproduce() and random.randint(0, self.fertility * other.fertility) == 0:
             new_dna = self.dna.merge(other.dna)
             new_dna.mutate()
-            new_beast = Beast(dna=new_dna, position=self.position.copy())
+            new_beast = Beast(dna=new_dna, position=self.position.copy(), parents=(self, other))
+            self.children.append(new_beast)
+            other.children.append(new_beast)
             new_beast.reset_reproduction_cooldown()
             self.reset_reproduction_cooldown()
             other.reset_reproduction_cooldown()
