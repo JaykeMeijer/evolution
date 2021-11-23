@@ -14,11 +14,14 @@ Simulation:
 - Optimize vincinity detection for reproduction (look at quad trees, r trees)
 - Pause/Play simulation
 - Click on beast for stats
-- Highlight families of beasts
-- Show family tree
 
 # Would be cool
 
+Evolution:
 - Add items to environment - obstacles, dangers
 - Add environment factors that suite certain beasts, eg forest limits size
 - Add aging, disease
+
+Simulation:
+- Highlight families of beasts
+- Show family tree
