@@ -1,6 +1,7 @@
 from dataclasses import dataclass
-
+import math
 import random
+from typing import Tuple
 
 
 XSIZE = 1000
@@ -20,10 +21,21 @@ class Position:
         if 0 < new_y < YSIZE:
             self.y = new_y
 
+    def tuple(self) -> Tuple[int, int]:
+        return (self.x, self.y)
+
+    def copy(self) -> "Position":
+        return Position(self.x, self.y)
+
     @staticmethod
     def random() -> "Position":
         return Position(random.randint(0, XSIZE), random.randint(0, YSIZE))
 
 
 def distance(a: Position, b: Position) -> float:
-    return ((((a.x - b.x)**2) + ((a.y-b.y)**2))**0.5)
+    return math.dist(a.tuple(), b.tuple())
+
+
+def move(start: Position, direction: int, distance: int):
+    start.x = round(start.x + math.cos(math.radians(direction)) * distance)
+    start.y = round(start.y + math.sin(math.radians(direction)) * distance)

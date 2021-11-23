@@ -1,4 +1,3 @@
-from operator import pos
 import random
 from typing import List
 
@@ -6,8 +5,8 @@ import pygame
 
 from beast.brain import Brain
 from beast.dna.dna import DNA
-from beast.interact import Action, Move
-from world.world import Position
+from beast.interact import Action, MoveForward, Turn
+from world.world import Position, move
 
 
 class Beast:
@@ -27,6 +26,7 @@ class Beast:
             self.position = position
         else:
             self.position = Position.random()
+        self.rotation = random.randint(0, 360)
 
         self.brain = Brain(self.dna)
 
@@ -55,7 +55,7 @@ class Beast:
         if self.reproduction_cooldown == 0 and random.randint(0, 100) == 0:
             new_dna = self.dna.merge(other.dna)
             new_dna.mutate()
-            new_beast = Beast(dna=new_dna, position=self.position)
+            new_beast = Beast(dna=new_dna, position=self.position.copy())
             new_beast.reset_reproduction_cooldown()
             self.reset_reproduction_cooldown()
             other.reset_reproduction_cooldown()
@@ -63,15 +63,18 @@ class Beast:
 
         return []
 
-    def draw(self, screen: pygame.Surface):
+    def draw(self, screen: pygame.surface.Surface):
         pygame.draw.circle(screen, self.color, (self.position.x, self.position.y), self.size)
 
     def reset_reproduction_cooldown(self):
         self.reproduction_cooldown = self.base_reproduction_cooldown
 
     def _apply_action(self, action: Action) -> float:
-        if isinstance(action, Move):
-            self.position.move(action.x, action.y)
-            return self.energy_consumption
+        if isinstance(action, MoveForward):
+            move(self.position, self.rotation, action.distance)
+            return self.energy_consumption / 5 * action.distance
+        elif isinstance(action, Turn):
+            self.rotation = (self.rotation + action.degrees) % 360
+            return 0
         else:
             return 0
