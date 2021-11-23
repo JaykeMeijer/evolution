@@ -14,6 +14,8 @@ Simulation:
 - Optimize vincinity detection for reproduction (look at quad trees, r trees)
 - Pause/Play simulation
 - Click on beast for stats
+- Highlight families of beasts
+- Show family tree
 
 # Would be cool
 
