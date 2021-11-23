@@ -6,6 +6,7 @@ from typing import Tuple
 
 XSIZE = 1000
 YSIZE = 1000
+BORDER_BUFFER = 10
 
 
 @dataclass
@@ -13,13 +14,10 @@ class Position:
     x: int = 0
     y: int = 0
 
-    def move(self, x: int, y: int):
-        new_x = self.x + x
-        new_y = self.y + y
-        if 0 < new_x < XSIZE:
-            self.x = new_x
-        if 0 < new_y < YSIZE:
-            self.y = new_y
+    def move(self, direction: int, distance: int):
+        new_x, new_y = translate(self.tuple(), direction, distance)
+        self.x = max(min(new_x, XSIZE - BORDER_BUFFER), BORDER_BUFFER)
+        self.y = max(min(new_y, YSIZE - BORDER_BUFFER), BORDER_BUFFER)
 
     def tuple(self) -> Tuple[int, int]:
         return (self.x, self.y)
@@ -36,6 +34,9 @@ def distance(a: Position, b: Position) -> float:
     return math.dist(a.tuple(), b.tuple())
 
 
-def move(start: Position, direction: int, distance: int):
-    start.x = round(start.x + math.cos(math.radians(direction)) * distance)
-    start.y = round(start.y + math.sin(math.radians(direction)) * distance)
+def translate(start: Tuple[int, int], direction: int, distance: int) -> Tuple[int, int]:
+    radians = math.radians(direction)
+    return (
+        round(start[0] + math.sin(radians) * distance),
+        round(start[1] - math.cos(radians) * distance)
+    )

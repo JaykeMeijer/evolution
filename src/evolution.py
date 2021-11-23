@@ -1,4 +1,4 @@
-from time import time, sleep
+from time import time
 from typing import List
 from threading import Thread
 
@@ -9,14 +9,12 @@ from world.world import distance
 
 NUM_BEASTS = 50
 MAX_REPLICATION_DISTANCE = 25
+SIMULATION_STEP_TIME = 0.01
 
 state = State()
 render = Render(state)
 
-last_simulation_iteration = 0
-simulation_step_time = 0.1
-
-active = True
+time_for_step: float = 0.1
 
 def setup_world():
     print("Setting up world")
@@ -25,14 +23,14 @@ def setup_world():
 
 def simulate_beasts():
     new_beasts: List[Beast] = []
-    dead_beasts: List[Beast] = []
+    despawn_beasts: List[Beast] = []
     for beast in state.beasts:
         beast.step()
+        beast.validate()
+        if beast.despawnable():
+            despawn_beasts.append(beast)
 
-        if not beast.validate():
-            dead_beasts.append(beast)
-
-    for beast in dead_beasts:
+    for beast in despawn_beasts:
         state.beasts.remove(beast)
 
     # TODO: Optimize
@@ -45,25 +43,23 @@ def simulate_beasts():
 
 
 def game_loop():
-    global simulation_step_time
-    global active
+    global time_for_step
+    last_simulation_iteration = 0
 
-    while active:
-        if time() - last_simulation_iteration > simulation_step_time:
+    while state.active:
+        if time() - last_simulation_iteration > SIMULATION_STEP_TIME:
             simulate_beasts()
 
             if len(state.beasts) == 0:
-                active = False
+                state.active = False
 
-            simulation_step_time = time()
+            time_for_step = time() - last_simulation_iteration
+            last_simulation_iteration = time()
 
 
 def render_loop():
-    global active
-
-    while active:
-        if not render.draw():
-            active = False
+    while state.active:
+        render.draw(time_for_step)
 
 
 def run_simulation():
@@ -72,6 +68,9 @@ def run_simulation():
     simulation_thread.start()
 
     render_loop()
+    print("Waiting for simulation thread to finish")
+    simulation_thread.join()
+    print("Shutting down")
 
 
 if __name__ == "__main__":
