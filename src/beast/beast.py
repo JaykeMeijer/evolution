@@ -62,7 +62,6 @@ class Beast:
         return not self.dead and self.reproduction_cooldown == 0
 
     def reproduce(self, other: "Beast") -> List["Beast"]:
-        # TODO: Use fitness for match ups
         if self._can_reproduce() and random.randint(0, self.fertility * other.fertility) == 0:
             new_dna = self.dna.merge(other.dna)
             new_dna.mutate()
