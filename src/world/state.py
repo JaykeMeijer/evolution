@@ -8,3 +8,6 @@ from beast.beast import Beast
 class State:
     active: bool = True
     beasts: List[Beast] = field(default_factory=list)
+
+
+state = State()

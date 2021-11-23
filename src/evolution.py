@@ -1,17 +1,14 @@
 from time import time
-from typing import List
 from threading import Thread
 
 from beast.beast import Beast
-from world.state import State
+from beast.simulate import simulate_beasts
+from world.state import state
 from world.render import Render
-from world.world import distance
 
 NUM_BEASTS = 50
-MAX_REPLICATION_DISTANCE = 25
 SIMULATION_STEP_TIME = 0.01
 
-state = State()
 render = Render(state)
 
 time_for_step: float = 0.1
@@ -19,27 +16,6 @@ time_for_step: float = 0.1
 def setup_world():
     print("Setting up world")
     state.beasts += [Beast() for x in range(NUM_BEASTS)]
-
-
-def simulate_beasts():
-    new_beasts: List[Beast] = []
-    despawn_beasts: List[Beast] = []
-    for beast in state.beasts:
-        beast.step()
-        beast.validate()
-        if beast.despawnable():
-            despawn_beasts.append(beast)
-
-    for beast in despawn_beasts:
-        state.beasts.remove(beast)
-
-    # TODO: Optimize
-    for i, a in enumerate(state.beasts):
-        for b in state.beasts[i+1:]:
-            if distance(a.position, b.position) < MAX_REPLICATION_DISTANCE:
-                new_beasts += a.reproduce(b)
-
-    state.beasts += new_beasts
 
 
 def game_loop():
