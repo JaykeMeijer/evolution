@@ -72,8 +72,8 @@ dna_structure: Dict[str, DNAStructure] = {
     "energy_consumption": DNAStructure(8, FloatGenome, {"min": 0.5, "max": 1.5}),
     "size": DNAStructure(16, IntGenome, {"min": 3, "max": 10}),
     "color": DNAStructure(24, Tuple3Genome, {}),
-    "reproduction_cooldown": DNAStructure(8, IntGenome, {"min": 50, "max": 150}),
-    "fertility": DNAStructure(8, IntGenome, {"min": 0, "max": 75}),
+    "reproduction_cooldown": DNAStructure(32, IntGenome, {"min": 50, "max": 150}),
+    "fertility": DNAStructure(40, IntGenome, {"min": 0, "max": 75}),
 }
 
 def get_genome(dna_str: str, description: str) -> Genome:
