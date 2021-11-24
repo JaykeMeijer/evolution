@@ -20,7 +20,7 @@ class Beast:
 
     position: Position
 
-    def __init__(self, dna: DNA = None, position: Position = None, parents: Tuple["Beast"] = None):
+    def __init__(self, dna: DNA = None, position: Position = None, parents: Tuple["Beast", "Beast"] = None):
         if dna:
             self.dna = dna
         else:
@@ -31,7 +31,7 @@ class Beast:
         else:
             self.position = Position.random()
 
-        self.parents: Optional[Tuple[Beast]] = parents
+        self.parents: Optional[Tuple[Beast, Beast]] = parents
         self.children: List[Beast] = []
 
         self.rotation = random.randint(0, 360)

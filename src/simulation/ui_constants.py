@@ -1,0 +1,2 @@
+XSIZE = 900
+YSIZE = 900

@@ -3,9 +3,8 @@ import math
 import random
 from typing import Tuple
 
+from simulation.ui_constants import XSIZE, YSIZE
 
-XSIZE = 1000
-YSIZE = 1000
 BORDER_BUFFER = 10
 
 
