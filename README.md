@@ -27,6 +27,8 @@ Evolution:
 - Add items to environment - obstacles, dangers
 - Add environment factors that suite certain beasts, eg forest limits size
 - Add aging, disease
+- Implement species: Certain max distance between genes. If distance is too large, there's a different species, which
+  prevents reproduction and cannibalism
 
 Simulation:
 - Highlight families of beasts
