@@ -8,7 +8,7 @@ genetic code, with possibly some random mutations.
 Currently, the "brain" of the beasts selects random actions. However, the plan is to use inputs such as distance to others, objects etc, and some kind of
 basic neural network.
 
-Loosely based on https://www.youtube.com/watch?v=N3tRFayqVtk
+Inspired by / loosely based on https://www.youtube.com/watch?v=N3tRFayqVtk and https://www.youtube.com/watch?v=myJ7YOZGkv0&t=368s
 
 # TODO
 
