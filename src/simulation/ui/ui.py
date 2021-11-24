@@ -84,7 +84,7 @@ class UI:
 
     def _display_beast_stats(self, beast: Beast):
         popup: Popup = cast(Popup, self.static_elements["beast_stats"])
-        popup.set_text(beast.stats_string())
+        popup.set_text_dynamic(beast.stats_string)
         popup.shown = True
 
     def _unselect_all(self):

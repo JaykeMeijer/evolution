@@ -1,4 +1,4 @@
-from typing import Tuple, Callable
+from typing import Optional, Tuple, Callable
 
 import pygame
 
@@ -66,13 +66,22 @@ class Popup(Element):
 
         self.shown = False
         self.text = ""
+        self.text_dynamic: Optional[Callable] = None
         self.font = pygame.font.SysFont("Calibri", 18)
 
     def set_text(self, text: str):
         self.text = text
+        self.text_dynamic = None
+
+    def set_text_dynamic(self, text_function: Callable):
+        self.text_dynamic = text_function
 
     def draw(self, screen: pygame.surface.Surface):
         if self.shown:
             pygame.draw.rect(screen, (0, 0, 0), self.border_rect, width=1, border_radius=5)
             pygame.draw.rect(screen, (255, 255, 255), self.rect, border_radius=5)
-            draw_multiline_text(screen, self.text, (self.location[0] + 10, self.location[1] + 10), self.font)
+            if self.text_dynamic is not None:
+                text = self.text_dynamic()
+            else:
+                text = self.text
+            draw_multiline_text(screen, text, (self.location[0] + 10, self.location[1] + 10), self.font)
