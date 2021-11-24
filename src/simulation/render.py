@@ -12,8 +12,6 @@ class Render:
     last_frame: float = 0
 
     def __init__(self, state: State, ui: UI):
-        pygame.init()
-        pygame.font.init()
         self.font = pygame.font.SysFont("Calibri", 24)
         self.font.bold = True
         self.screen = pygame.display.set_mode([XSIZE, YSIZE])

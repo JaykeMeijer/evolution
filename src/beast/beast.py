@@ -55,6 +55,17 @@ class Beast:
 
             self.reproduction_cooldown = max(self.reproduction_cooldown - 1, 0)
 
+    def stats_string(self) -> str:
+        return (
+            f"energy: {self.energy:.1f}\n"
+            f"reproduction_cooldown: {self.reproduction_cooldown}\n"
+            f"-----------------------\n"
+            f"size: {self.size}\n"
+            f"fertility: {self.fertility}\n"
+            f"energy_consumption: {self.energy_consumption:.1f}\n"
+            f"reproduction_cooldown: {self.base_reproduction_cooldown}\n"
+        )
+
     def validate(self):
         if self.energy < 0 and not self.dead:
             self.dead = 1

@@ -1,6 +1,8 @@
 from time import time, sleep
 from threading import Thread
 
+import pygame
+
 from beast.beast import Beast
 from beast.simulate import simulate_beasts
 from simulation.events import EventLoop
@@ -12,6 +14,9 @@ from simulation.ui.ui import UI
 NUM_BEASTS = 50
 SIMULATION_STEP_TIME = 0.01
 
+pygame.init()
+pygame.font.init()
+
 ui = UI(state)
 render = Render(state, ui)
 eventLoop = EventLoop(state, ui)
@@ -20,7 +25,7 @@ time_for_step: float = 0.1
 
 def setup_world():
     print("Setting up world")
-    state.beasts += [Beast() for x in range(NUM_BEASTS)]
+    state.beasts += [Beast() for _ in range(NUM_BEASTS)]
 
 
 def _game_loop():

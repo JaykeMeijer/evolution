@@ -6,6 +6,8 @@ from typing import Tuple
 from simulation.ui_constants import XSIZE, YSIZE
 
 BORDER_BUFFER = 10
+XLIMIT = XSIZE - BORDER_BUFFER
+YLIMIT = YSIZE - BORDER_BUFFER
 
 
 @dataclass
@@ -15,8 +17,8 @@ class Position:
 
     def move(self, direction: int, distance: int):
         new_x, new_y = translate(self.tuple(), direction, distance)
-        self.x = max(min(new_x, XSIZE - BORDER_BUFFER), BORDER_BUFFER)
-        self.y = max(min(new_y, YSIZE - BORDER_BUFFER), BORDER_BUFFER)
+        self.x = max(min(new_x, XLIMIT), BORDER_BUFFER)
+        self.y = max(min(new_y, YLIMIT), BORDER_BUFFER)
 
     def tuple(self) -> Tuple[int, int]:
         return (self.x, self.y)

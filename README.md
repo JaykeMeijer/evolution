@@ -20,7 +20,6 @@ Evolution:
 
 Simulation:
 - Optimize vincinity detection for reproduction (look at quad trees, r trees)
-- Click on beast for stats
 
 # Would be cool
 
