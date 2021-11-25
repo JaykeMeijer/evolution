@@ -61,6 +61,23 @@ class Tuple3Gene(Gene):
 
 
 @dataclass
+class NeuronConnectionGene(Gene):
+    def __init__(self, location: int, dna: str, min: float, max: float):
+        self.value = int(dna[location:location + 8], base=16)
+        self.min = min
+        self.max = max
+
+    def get_value(self) -> Dict[str, int|float]:
+        return {
+            "neuron1_class": int(self.value >> 31),
+            "neuron1_type": int(self.value >> 26 & 31),
+            "neuron2_class": int(self.value >> 25 & 1),
+            "neuron2_type": int(self.value >> 20 & 31),
+            "strength": (float(self.value & 0x1fffff) / 0x1fffff * (self.max - self.min)) + self.min
+        }
+
+
+@dataclass
 class DNAStructure:
     location: int
     type: Type
@@ -74,6 +91,8 @@ dna_structure: Dict[str, DNAStructure] = {
     "color": DNAStructure(24, Tuple3Gene, {}),
     "reproduction_cooldown": DNAStructure(32, IntGene, {"min": 50, "max": 150}),
     "fertility": DNAStructure(40, IntGene, {"min": 0, "max": 75}),
+    "neuron_connection_1": DNAStructure(48, NeuronConnectionGene, {"min": -1.0, "max": 1.0}),
+    "neuron_connection_2": DNAStructure(56, NeuronConnectionGene, {"min": -1.0, "max": 1.0}),
 }
 
 def get_gene(dna_str: str, description: str) -> Gene:

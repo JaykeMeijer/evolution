@@ -3,9 +3,9 @@ from typing import List, Tuple, Optional
 
 import pygame
 
-from beast.brain import Brain
+from beast.brain.brain import Brain
 from beast.dna.dna import DNA
-from beast.interact import Action, MoveForward, Turn
+from beast.interact import Action, Input, MoveForward, Turn
 from world.world import Position, translate
 
 
@@ -21,15 +21,8 @@ class Beast:
     position: Position
 
     def __init__(self, dna: DNA = None, position: Position = None, parents: Tuple["Beast", "Beast"] = None):
-        if dna:
-            self.dna = dna
-        else:
-            self.dna = DNA()
-
-        if position:
-            self.position = position
-        else:
-            self.position = Position.random()
+        self.dna = dna if dna else DNA()
+        self.position = position if position else Position.random()
 
         self.parents: Optional[Tuple[Beast, Beast]] = parents
         self.children: List[Beast] = []
@@ -45,11 +38,14 @@ class Beast:
         self.base_reproduction_cooldown: int = self.dna.get_gene("reproduction_cooldown").get_value()
         self.fertility: int = self.dna.get_gene("fertility").get_value()
 
+    def _get_inputs(self) -> List[Input]:
+        return []
+
     def step(self):
         if self.dead > 0:
             self.dead += 1
         else:
-            actions = self.brain.step([])
+            actions = self.brain.step(self._get_inputs())
             for action in actions:
                 self.energy -= self._apply_action(action)
 
