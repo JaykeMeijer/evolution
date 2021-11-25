@@ -26,8 +26,10 @@ class Brain:
     def step(self, inputs: InputSet) -> List[Action]:
         actions: List[Action] = []
 
+        # TODO: Maybe quick check if no inputs allows for breakout
+
         for neuron in self.output_neurons:
-            value = math.prod([
+            value = sum([
                 self._get_incoming_connection_value(connection.neuron_1, inputs) * connection.strength
                 for connection in neuron.outgoing_connections
             ])
@@ -39,14 +41,18 @@ class Brain:
         if isinstance(neuron, InputNeuron):
             return self._get_value_from_input_neuron(neuron, inputs)
         else:
-            return math.prod([
+            return sum([
                 self._get_incoming_connection_value(connection.neuron_1, inputs) * connection.strength
                 for connection in neuron.outgoing_connections
             ])
 
     def _get_value_from_input_neuron(self, neuron: InputNeuron, inputs: InputSet) -> float:
         if neuron.neuron_type == InputType.MATE_DISTANCE:
-            return inputs.distance_to_nearest_mate if inputs.distance_to_nearest_mate else 0
+            # TODO cleanup
+            if inputs.distance_to_nearest_mate:
+                return 1 if inputs.distance_to_nearest_mate > 0 else -1
+            else:
+                return 0
         elif neuron.neuron_type == InputType.MATE_DIRECTION:
             return inputs.direction_of_nearest_mate if inputs.direction_of_nearest_mate else 0
         else:
