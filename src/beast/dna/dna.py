@@ -1,6 +1,6 @@
 import random
 
-from beast.dna.genome import DNA_LENGTH, Genome, get_genome
+from beast.dna.gene import DNA_LENGTH, Gene, get_gene
 
 
 class DNA:
@@ -28,5 +28,5 @@ class DNA:
                 new_str += char
         self.dna = new_str
 
-    def get_genome(self, description: str) -> Genome:
-        return get_genome(self.dna, description)
+    def get_gene(self, description: str) -> Gene:
+        return get_gene(self.dna, description)

@@ -38,12 +38,12 @@ class Beast:
 
         self.brain: Brain = Brain(self.dna)
 
-        self.energy: float = self.dna.get_genome("base_energy").get_value()
-        self.size: int = self.dna.get_genome("size").get_value()
-        self.energy_consumption: float = self.dna.get_genome("energy_consumption").get_value() * (self.size / 10)
-        self.color: Tuple[int, int, int] = self.dna.get_genome("color").get_value()
-        self.base_reproduction_cooldown: int = self.dna.get_genome("reproduction_cooldown").get_value()
-        self.fertility: int = self.dna.get_genome("fertility").get_value()
+        self.energy: float = self.dna.get_gene("base_energy").get_value()
+        self.size: int = self.dna.get_gene("size").get_value()
+        self.energy_consumption: float = self.dna.get_gene("energy_consumption").get_value() * (self.size / 10)
+        self.color: Tuple[int, int, int] = self.dna.get_gene("color").get_value()
+        self.base_reproduction_cooldown: int = self.dna.get_gene("reproduction_cooldown").get_value()
+        self.fertility: int = self.dna.get_gene("fertility").get_value()
 
     def step(self):
         if self.dead > 0:

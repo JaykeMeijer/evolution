@@ -7,7 +7,7 @@ GENE_SIZE = 8
 
 
 @dataclass
-class Genome:
+class Gene:
     value: int
 
     def __init__(self, location: int, dna: str):
@@ -18,7 +18,7 @@ class Genome:
 
 
 @dataclass
-class FloatGenome(Genome):
+class FloatGene(Gene):
     min: float = 0.0
     max: float = 1.0
 
@@ -33,7 +33,7 @@ class FloatGenome(Genome):
 
 
 @dataclass
-class IntGenome(Genome):
+class IntGene(Gene):
     min: int = 0
     max: int = 100
 
@@ -48,7 +48,7 @@ class IntGenome(Genome):
 
 
 @dataclass
-class Tuple3Genome(Genome):
+class Tuple3Gene(Gene):
     def __init__(self, location: int, dna: str):
         self.value = int(dna[location:location + 8], base=16)
 
@@ -68,14 +68,14 @@ class DNAStructure:
 
 
 dna_structure: Dict[str, DNAStructure] = {
-    "base_energy": DNAStructure(0, IntGenome, {"min": 100, "max": 750}),
-    "energy_consumption": DNAStructure(8, FloatGenome, {"min": 0.5, "max": 1.5}),
-    "size": DNAStructure(16, IntGenome, {"min": 3, "max": 10}),
-    "color": DNAStructure(24, Tuple3Genome, {}),
-    "reproduction_cooldown": DNAStructure(32, IntGenome, {"min": 50, "max": 150}),
-    "fertility": DNAStructure(40, IntGenome, {"min": 0, "max": 75}),
+    "base_energy": DNAStructure(0, IntGene, {"min": 100, "max": 750}),
+    "energy_consumption": DNAStructure(8, FloatGene, {"min": 0.5, "max": 1.5}),
+    "size": DNAStructure(16, IntGene, {"min": 3, "max": 10}),
+    "color": DNAStructure(24, Tuple3Gene, {}),
+    "reproduction_cooldown": DNAStructure(32, IntGene, {"min": 50, "max": 150}),
+    "fertility": DNAStructure(40, IntGene, {"min": 0, "max": 75}),
 }
 
-def get_genome(dna_str: str, description: str) -> Genome:
+def get_gene(dna_str: str, description: str) -> Gene:
     structure = dna_structure[description]
     return structure.type(structure.location, dna_str, **structure.args)

@@ -15,7 +15,7 @@ Inspired by / loosely based on https://www.youtube.com/watch?v=N3tRFayqVtk and h
 Evolution:
 - Implement brain and non-random moves
 - Add food, moving towards food (gives energy)
-- Add fighting / eating eachother: bigger is better, fighting genome
+- Add fighting / eating eachother: bigger is better, fighting gene
 - Add speed as genetic parameter
 
 Simulation:

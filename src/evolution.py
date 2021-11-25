@@ -53,6 +53,7 @@ def _render_loop():
 
 
 def _event_loop():
+    print("Starting event loop")
     while state.active:
         eventLoop.check_events()
 
