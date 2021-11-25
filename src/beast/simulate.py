@@ -11,8 +11,13 @@ MAX_REPLICATION_DISTANCE = 15
 
 
 def simulate_beasts():
-    new_beasts: List[Beast] = []
+    _simulate_beasts()
+    state.beasts += _simulate_reproduction()
+
+
+def _simulate_beasts():
     despawn_beasts: List[Beast] = []
+
     for beast in state.beasts:
         beast.step()
         beast.validate()
@@ -21,6 +26,10 @@ def simulate_beasts():
 
     for beast in despawn_beasts:
         state.beasts.remove(beast)
+
+
+def _simulate_reproduction() -> List[Beast]:
+    new_beasts: List[Beast] = []
 
     tree = QuadTree(Rect(0, 0, XSIZE, YSIZE))
     for beast in state.beasts:
@@ -32,4 +41,4 @@ def simulate_beasts():
             if nearby.obj != beast:
                 new_beasts += beast.reproduce(nearby.obj)
 
-    state.beasts += new_beasts
+    return new_beasts
