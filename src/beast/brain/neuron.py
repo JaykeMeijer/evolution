@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import cast
+from typing import List, cast
 
 from beast.dna.gene import NeuronConnectionGene
 
 
 class InputType(Enum):
-    MATE_DISTANCE = 0
+    MATE_DISTANCE = 0  # Change this to be "MATE_AHEAD" or not, makes more sense
     MATE_DIRECTION = 1
 
 
@@ -16,7 +16,8 @@ class OutputType(Enum):
 
 
 class Neuron:
-    pass
+    incoming_connections: List["Connection"] = []
+    outgoing_connections: List["Connection"] = []
 
 
 @dataclass
@@ -45,6 +46,9 @@ class Connection:
         self.neuron_1 = get_neuron_1(cast(int, gene_unpacked["neuron1_class"]), cast(int, gene_unpacked["neuron1_type"]))
         self.neuron_2 = get_neuron_2(cast(int, gene_unpacked["neuron2_class"]), cast(int, gene_unpacked["neuron2_type"]))
         self.strength = gene_unpacked["strength"]
+
+        self.neuron_1.outgoing_connections.append(self)
+        self.neuron_2.incoming_connections.append(self)
 
 
 def get_neuron_1(class_num: int, type_num: int) -> Neuron:

@@ -52,7 +52,7 @@ class QuadTree:
     def in_tree(self, point: QuadTreePoint) -> bool:
         return self.area.collidepoint(point.coord())
 
-    def point_in_range(self, location: Tuple[int, int], range: int) -> List[QuadTreePoint]:
+    def points_in_range(self, location: Tuple[int, int], range: int) -> List[QuadTreePoint]:
         found_points: List[QuadTreePoint] = []
         boundary = Rect(location[0], location[1], 2 * range, 2 * range)
 
@@ -63,7 +63,7 @@ class QuadTree:
 
         if self.subtrees is not None:
             for tree in self.subtrees:
-                found_points += tree.point_in_range(location, range)
+                found_points += tree.points_in_range(location, range)
         return found_points
 
     def _select_points_in_circle(self, location: Tuple[int, int], range: int, boundary: Rect) -> List[QuadTreePoint]:

@@ -1,9 +1,15 @@
+from dataclasses import dataclass
+from typing import Optional
+
+
 class Action:
     pass
 
 
-class Input:
-    pass
+@dataclass
+class InputSet:
+    distance_to_nearest_mate: Optional[float]
+    direction_of_nearest_mate: Optional[float]
 
 
 class MoveForward(Action):

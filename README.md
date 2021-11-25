@@ -30,3 +30,4 @@ Evolution:
 Simulation:
 - Highlight families of beasts
 - Show family tree
+- Render and show brain network

@@ -1,3 +1,4 @@
+import math
 import random
 from typing import List, Tuple, Optional
 
@@ -5,7 +6,8 @@ import pygame
 
 from beast.brain.brain import Brain
 from beast.dna.dna import DNA
-from beast.interact import Action, Input, MoveForward, Turn
+from beast.interact import Action, InputSet, MoveForward, Turn
+from datastructures.quadtree import QuadTree, QuadTreePoint
 from world.world import Position, translate
 
 
@@ -37,19 +39,7 @@ class Beast:
         self.color: Tuple[int, int, int] = self.dna.get_gene("color").get_value()
         self.base_reproduction_cooldown: int = self.dna.get_gene("reproduction_cooldown").get_value()
         self.fertility: int = self.dna.get_gene("fertility").get_value()
-
-    def _get_inputs(self) -> List[Input]:
-        return []
-
-    def step(self):
-        if self.dead > 0:
-            self.dead += 1
-        else:
-            actions = self.brain.step(self._get_inputs())
-            for action in actions:
-                self.energy -= self._apply_action(action)
-
-            self.reproduction_cooldown = max(self.reproduction_cooldown - 1, 0)
+        self.mate_detection_range: int = 100  # TODO: Make genetic
 
     def stats_string(self) -> str:
         return (
@@ -61,6 +51,16 @@ class Beast:
             f"energy_consumption: {self.energy_consumption:.1f}\n"
             f"reproduction_cooldown: {self.base_reproduction_cooldown}\n"
         )
+
+    def step(self, tree: QuadTree):
+        if self.dead > 0:
+            self.dead += 1
+        else:
+            actions = self.brain.step(self._get_inputs(tree))
+            for action in actions:
+                self.energy -= self._apply_action(action)
+
+            self.reproduction_cooldown = max(self.reproduction_cooldown - 1, 0)
 
     def validate(self):
         if self.energy < 0 and not self.dead:
@@ -85,6 +85,38 @@ class Beast:
             return [new_beast]
 
         return []
+
+    def _get_inputs(self, tree: QuadTree) -> InputSet:
+        nearest_mate = self._find_nearest_mate(tree)
+        return InputSet(
+            distance_to_nearest_mate=(
+                math.dist(self.position.tuple(), nearest_mate.position.tuple())
+                if nearest_mate else None
+            ),
+            direction_of_nearest_mate=(
+                math.degrees(
+                    math.atan2((self.position.x - nearest_mate.position.x), (self.position.y - nearest_mate.position.y))
+                )
+                if nearest_mate else None
+            )
+        )
+
+    def _find_nearest_mate(self, tree: QuadTree) -> Optional["Beast"]:
+        nearby_mates = tree.points_in_range(self.position.tuple(), 100)
+        if len(nearby_mates) == 1:
+            # Only self
+            return None
+        else:
+            nearby_mates_sorted = [
+                mate.obj
+                for mate, _ in sorted(
+                    [
+                        (mate, math.dist(self.position.tuple(), mate.coord()))
+                        for mate in nearby_mates
+                    ], key=lambda x: x[1]
+                )
+            ]
+            return nearby_mates_sorted[1]
 
     def draw(self, screen: pygame.surface.Surface):
         if self.dead > 0:
