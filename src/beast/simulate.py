@@ -1,10 +1,13 @@
 from typing import List
 
-from beast.beast import Beast
-from world.state import state
-from world.world import distance
+from pygame.rect import Rect
 
-MAX_REPLICATION_DISTANCE = 25
+from beast.beast import Beast
+from datastructures.quadtree import QuadTree, QuadTreePoint
+from world.state import state
+from simulation.ui_constants import XSIZE, YSIZE
+
+MAX_REPLICATION_DISTANCE = 15
 
 
 def simulate_beasts():
@@ -19,10 +22,14 @@ def simulate_beasts():
     for beast in despawn_beasts:
         state.beasts.remove(beast)
 
-    # TODO: Optimize
-    for i, a in enumerate(state.beasts):
-        for b in state.beasts[i+1:]:
-            if distance(a.position, b.position) < MAX_REPLICATION_DISTANCE:
-                new_beasts += a.reproduce(b)
+    tree = QuadTree(Rect(0, 0, XSIZE, YSIZE))
+    for beast in state.beasts:
+        tree.insert(QuadTreePoint(beast.position.x, beast.position.y, beast))
+
+    for beast in state.beasts:
+        nearby_beasts = tree.point_in_range(beast.position.tuple(), MAX_REPLICATION_DISTANCE)
+        for nearby in nearby_beasts:
+            if nearby.obj != beast:
+                new_beasts += beast.reproduce(nearby.obj)
 
     state.beasts += new_beasts

@@ -18,9 +18,6 @@ Evolution:
 - Add fighting / eating eachother: bigger is better, fighting gene
 - Add speed as genetic parameter
 
-Simulation:
-- Optimize vincinity detection for reproduction (look at quad trees, r trees)
-
 # Would be cool
 
 Evolution:
