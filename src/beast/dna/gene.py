@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 import dataclasses
 from typing import Any, Dict, Tuple, Type
 
-DNA_LENGTH = 64
+DNA_LENGTH = 128
 GENE_SIZE = 8
 
 
@@ -93,6 +93,8 @@ dna_structure: Dict[str, DNAStructure] = {
     "fertility": DNAStructure(40, IntGene, {"min": 0, "max": 75}),
     "neuron_connection_1": DNAStructure(48, NeuronConnectionGene, {"min": -1.0, "max": 1.0}),
     "neuron_connection_2": DNAStructure(56, NeuronConnectionGene, {"min": -1.0, "max": 1.0}),
+    "neuron_connection_3": DNAStructure(64, NeuronConnectionGene, {"min": -1.0, "max": 1.0}),
+    "neuron_connection_4": DNAStructure(70, NeuronConnectionGene, {"min": -1.0, "max": 1.0}),
 }
 
 def get_gene(dna_str: str, description: str) -> Gene:

@@ -1,11 +1,10 @@
-import math
 import random
 from typing import Dict, List, cast
 
 from beast.brain.neuron import Connection, InputNeuron, InputType, Neuron, OutputNeuron, OutputType
 from beast.dna.dna import DNA
 from beast.dna.gene import NeuronConnectionGene
-from beast.interact import Action, InputSet, MoveForward, Turn
+from beast.interact import Action, InputSet, MoveForward, Noop, Turn
 
 
 class Brain:
@@ -14,6 +13,8 @@ class Brain:
         self.neuron_connections: List[Connection] = [
             Connection(cast(NeuronConnectionGene, self.dna.get_gene("neuron_connection_1"))),
             Connection(cast(NeuronConnectionGene, self.dna.get_gene("neuron_connection_2"))),
+            Connection(cast(NeuronConnectionGene, self.dna.get_gene("neuron_connection_3"))),
+            Connection(cast(NeuronConnectionGene, self.dna.get_gene("neuron_connection_4"))),
         ]
 
         self.output_neurons: Dict[OutputType, OutputNeuron] = {}
@@ -39,7 +40,7 @@ class Brain:
         for neuron in self.output_neurons.values():
             value = sum([
                 self._get_incoming_connection_value(connection.neuron_1, inputs) * connection.strength
-                for connection in neuron.outgoing_connections
+                for connection in neuron.incoming_connections
             ])
             actions.append(self._get_action_for_output_neuron(neuron, value))
 
@@ -56,20 +57,18 @@ class Brain:
 
     def _get_value_from_input_neuron(self, neuron: InputNeuron, inputs: InputSet) -> float:
         if neuron.neuron_type == InputType.MATE_DISTANCE:
-            # TODO cleanup
-            if inputs.distance_to_nearest_mate:
-                return 1 if inputs.distance_to_nearest_mate > 0 else -1
-            else:
-                return 0
+            return inputs.distance_to_nearest_mate if inputs.distance_to_nearest_mate else 0
         elif neuron.neuron_type == InputType.MATE_DIRECTION:
             return inputs.direction_of_nearest_mate if inputs.direction_of_nearest_mate else 0
+        elif neuron.neuron_type == InputType.RANDOM_INPUT:
+            return random.randint(0, 10)
         else:
             raise NotImplementedError(neuron.neuron_type)
 
     def _get_action_for_output_neuron(self, neuron: OutputNeuron, value: float) -> Action:
         if neuron.neuron_type == OutputType.MOVE_FORWARD:
-            return MoveForward(round((value) * 5))
+            return MoveForward() if value != 0 else Noop()
         elif neuron.neuron_type == OutputType.TURN:
-            return Turn(round(value * 30))
+            return Turn(round(value * 10))
         else:
             raise NotImplementedError(neuron.neuron_type)

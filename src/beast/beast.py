@@ -40,6 +40,7 @@ class Beast:
         self.base_reproduction_cooldown: int = self.dna.get_gene("reproduction_cooldown").get_value()
         self.fertility: int = self.dna.get_gene("fertility").get_value()
         self.mate_detection_range: int = 100  # TODO: Make genetic
+        self.speed: int = 5  # TODO: Make genetic
 
     def stats_string(self) -> str:
         return (
@@ -56,6 +57,7 @@ class Beast:
         if self.dead > 0:
             self.dead += 1
         else:
+            self.energy -= self.energy_consumption / 10
             actions = self.brain.step(self._get_inputs(tree))
             for action in actions:
                 self.energy -= self._apply_action(action)
@@ -104,7 +106,6 @@ class Beast:
     def _find_nearest_mate(self, tree: QuadTree) -> Optional["Beast"]:
         nearby_mates = tree.points_in_range(self.position.tuple(), 100)
         if len(nearby_mates) <= 1:
-            # Only self
             return None
         else:
             nearby_mates_sorted = [
@@ -143,8 +144,8 @@ class Beast:
 
     def _apply_action(self, action: Action) -> float:
         if isinstance(action, MoveForward):
-            self.position.move(self.rotation, action.distance)
-            return self.energy_consumption / 5 * action.distance
+            self.position.move(self.rotation, self.speed)
+            return self.energy_consumption / 5 * self.speed
         elif isinstance(action, Turn):
             self.rotation = (self.rotation + action.degrees) % 360
             return 0

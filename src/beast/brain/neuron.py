@@ -8,6 +8,7 @@ from beast.dna.gene import NeuronConnectionGene
 class InputType(Enum):
     MATE_DISTANCE = 0  # Change this to be "MATE_AHEAD" or not, makes more sense
     MATE_DIRECTION = 1
+    RANDOM_INPUT = 2
 
 
 class OutputType(Enum):
@@ -83,6 +84,6 @@ def get_neuron_1(class_num: int, type_num: int) -> Neuron:
 
 def get_neuron_2(class_num: int, type_num: int) -> Neuron:
     if True:#class_num == 0:
-        return OutputNeuron(OutputType(type_num % len(InputType)))
+        return OutputNeuron(OutputType(type_num % len(OutputType)))
     else:
         return InternalNeuron()

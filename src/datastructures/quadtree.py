@@ -20,29 +20,32 @@ class QuadTreePoint:
 class QuadTree:
     subtrees: Optional[Tuple["QuadTree", "QuadTree", "QuadTree", "QuadTree"]] = None
 
-    def __init__(self, area: Rect, depth: int = 0):
+    def __init__(self, area: Rect, depth: int = 0, parent: "QuadTree" = None):
         self.area = area
         self.points: List[QuadTreePoint] = []
         self.depth = depth
+        self.parent = parent
 
     def split(self) -> Tuple["QuadTree", "QuadTree", "QuadTree", "QuadTree"]:
         width = math.ceil(self.area.w / 2)
         height = math.ceil(self.area.h / 2)
         return (
-            self.subtree(Rect(self.area.x, self.area.y, width, height)),
-            self.subtree(Rect(self.area.x + width, self.area.y, width, height)),
-            self.subtree(Rect(self.area.x, self.area.y + width, width, height)),
-            self.subtree(Rect(self.area.x + width, self.area.y + height, width, height)),
+            self._subtree(Rect(self.area.x, self.area.y, width, height)),
+            self._subtree(Rect(self.area.x + width, self.area.y, width, height)),
+            self._subtree(Rect(self.area.x, self.area.y + width, width, height)),
+            self._subtree(Rect(self.area.x + width, self.area.y + height, width, height)),
         )
 
-    def subtree(self, rect: Rect) -> "QuadTree":
-        return QuadTree(rect, self.depth + 1)
+    def _subtree(self, rect: Rect) -> "QuadTree":
+        return QuadTree(rect, self.depth + 1, parent=self)
 
     def insert(self, point: QuadTreePoint) -> None:
         if self.subtrees is None and len(self.points) < MAX_POINTS:
             self.points.append(point)
         else:
             if self.subtrees is None:
+                if self.depth > 10:
+                    raise RecursionError
                 self.subtrees = self.split()
                 for old_point in self.points:
                     self._insert_in_subtrees(old_point)

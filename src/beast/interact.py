@@ -15,11 +15,12 @@ class InputSet:
         return all([val is None for val in vars(self).values()])
 
 
-class MoveForward(Action):
-    distance: int
+class Noop(Action):
+    pass
 
-    def __init__(self, distance: int):
-        self.distance = distance
+
+class MoveForward(Action):
+    pass
 
 
 class Turn(Action):
