@@ -11,6 +11,9 @@ class InputSet:
     distance_to_nearest_mate: Optional[float]
     direction_of_nearest_mate: Optional[float]
 
+    def all_none(self):
+        return all([val is None for val in vars(self).values()])
+
 
 class MoveForward(Action):
     distance: int

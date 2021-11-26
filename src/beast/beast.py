@@ -103,7 +103,7 @@ class Beast:
 
     def _find_nearest_mate(self, tree: QuadTree) -> Optional["Beast"]:
         nearby_mates = tree.points_in_range(self.position.tuple(), 100)
-        if len(nearby_mates) == 1:
+        if len(nearby_mates) <= 1:
             # Only self
             return None
         else:

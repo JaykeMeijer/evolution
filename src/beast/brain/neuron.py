@@ -16,23 +16,43 @@ class OutputType(Enum):
 
 
 class Neuron:
-    incoming_connections: List["Connection"] = []
-    outgoing_connections: List["Connection"] = []
+    def __init__(self):
+        self.incoming_connections: List["Connection"] = []
+        self.outgoing_connections: List["Connection"] = []
+
+    def merge(self, other: "Neuron"):
+        self.incoming_connections += other.incoming_connections
+        self.outgoing_connections += other.outgoing_connections
+
+    def __str__(self) -> str:
+        raise NotImplementedError
 
 
-@dataclass
 class InputNeuron(Neuron):
-    neuron_type: InputType
+    def __init__(self, neuron_type: InputType):
+        super().__init__()
+        self.neuron_type = neuron_type
+
+    def __str__(self) -> str:
+        return f"InputNeuron {self.neuron_type} <{id(self)}>"
 
 
-@dataclass
 class InternalNeuron(Neuron):
-    pass
+    def __init__(self):
+        super().__init__()
+
+    def __str__(self) -> str:
+        return f"InternalNeuron <{id(self)}>"
 
 
 @dataclass
 class OutputNeuron(Neuron):
-    neuron_type: OutputType
+    def __init__(self, neuron_type: OutputType):
+        super().__init__()
+        self.neuron_type = neuron_type
+
+    def __str__(self) -> str:
+        return f"OutputNeuron {self.neuron_type} <{id(self)}>"
 
 
 @dataclass
@@ -49,6 +69,9 @@ class Connection:
 
         self.neuron_1.outgoing_connections.append(self)
         self.neuron_2.incoming_connections.append(self)
+
+    def __str__(self):
+        return f"Connection <{id(self)}>: {self.neuron_1} -> {self.neuron_2} : {self.strength}"
 
 
 def get_neuron_1(class_num: int, type_num: int) -> Neuron:

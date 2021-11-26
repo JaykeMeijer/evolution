@@ -39,15 +39,21 @@ class QuadTree:
         return QuadTree(rect, self.depth + 1)
 
     def insert(self, point: QuadTreePoint) -> None:
-        if len(self.points) < MAX_POINTS:
+        if self.subtrees is None and len(self.points) < MAX_POINTS:
             self.points.append(point)
         else:
             if self.subtrees is None:
                 self.subtrees = self.split()
+                for old_point in self.points:
+                    self._insert_in_subtrees(old_point)
+                self.points = []
 
-            for subtree in self.subtrees:
-                if subtree.in_tree(point):
-                    subtree.insert(point)
+            self._insert_in_subtrees(point)
+
+    def _insert_in_subtrees(self, point):
+        for subtree in self.subtrees:
+            if subtree.in_tree(point):
+                subtree.insert(point)
 
     def in_tree(self, point: QuadTreePoint) -> bool:
         return self.area.collidepoint(point.coord())
@@ -59,11 +65,11 @@ class QuadTree:
         if not self.area.colliderect(boundary):
             return []
 
-        found_points += self._select_points_in_circle(location, range, boundary)
-
         if self.subtrees is not None:
             for tree in self.subtrees:
                 found_points += tree.points_in_range(location, range)
+        else:
+            found_points += self._select_points_in_circle(location, range, boundary)
         return found_points
 
     def _select_points_in_circle(self, location: Tuple[int, int], range: int, boundary: Rect) -> List[QuadTreePoint]:
