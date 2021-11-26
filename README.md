@@ -22,7 +22,9 @@ Evolution:
 
 Evolution:
 - Add items to environment - obstacles, dangers
-- Add environment factors that suite certain beasts, eg forest limits size
+- Add environment factors that suite certain beasts, for example:
+  - forest limits speed of larger beasts
+  - temperature effects energy usage (perhaps have a "fur" gene that decreases energy usage in cold, but decreases speed in warmth
 - Add aging, disease
 - Implement species: Certain max distance between genes. If distance is too large, there's a different species, which
   prevents reproduction and cannibalism
