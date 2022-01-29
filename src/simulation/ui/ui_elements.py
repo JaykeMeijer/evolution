@@ -88,6 +88,7 @@ class PushButton(Button):
     def on_click(self):
         super().on_click()
 
+
 class Popup(Element):
     def __init__(self, location: Tuple[int, int], size: Tuple[int, int], name: str):
         super().__init__(location, size, name)
@@ -120,10 +121,3 @@ class Popup(Element):
 
             if self.image is not None:
                 screen.blit(self.image, (self.location[0], self.location[1] + 300))
-
-
-@dataclass
-class Image:
-    size: Tuple[int, int]
-    data: bytes
-    format: str = "RGB"
