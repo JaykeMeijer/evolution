@@ -1,19 +1,15 @@
 import math
-from typing import Any, Dict, Iterable, List, Tuple, cast
-from beast.brain.neuron import InputNeuron, InputType, InternalNeuron, Neuron, OutputNeuron, OutputType
+from typing import Dict, List, Tuple, cast
 
-import networkx as nx
 import matplotlib as mpl
-import matplotlib.pyplot as plt
 import pygame
 
 from beast.beast import Beast
-from beast.brain.brain import Brain, BrainRenderer
+from beast.brain.brain import BrainRenderer
 from simulation.render_helpers import draw_multiline_text
 from simulation.ui_constants import XSIZE, YSIZE
 from simulation.ui.interactions import toggle_pause
-from simulation.ui.ui_elements import Button, Element, Image, Popup, ToggleButton
-from util.math_helpers import get_direction, translate
+from simulation.ui.ui_elements import Button, Element, Popup, ToggleButton
 from world.state import State
 
 mpl.use('Agg')
