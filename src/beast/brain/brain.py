@@ -175,6 +175,6 @@ class BrainRenderer:
         for node1, node2 in edges:
             direction = get_direction(pos[node1], pos[node2])
             distance = math.dist(pos[node1], pos[node2])
-            position = translate(pos[node1], direction, distance / 2)
+            position = translate(pos[node1], direction, int(distance / 2))
             label = self.font.render(labels[(node1, node2)], True, (0, 0, 0))
             surface.blit(label, (position[0] - label.get_width() / 2, position[1] + self.font.get_linesize()))

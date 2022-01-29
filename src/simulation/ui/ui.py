@@ -8,8 +8,8 @@ from beast.beast import Beast
 from beast.brain.brain import BrainRenderer
 from simulation.render_helpers import draw_multiline_text
 from simulation.ui_constants import XSIZE, YSIZE
-from simulation.ui.interactions import toggle_pause
-from simulation.ui.ui_elements import Button, Element, Popup, ToggleButton
+from simulation.ui.interactions import toggle_pause, step
+from simulation.ui.ui_elements import Button, Element, Popup, PushButton, ToggleButton
 from world.state import State
 
 mpl.use('Agg')
@@ -31,6 +31,13 @@ class UI:
                 lambda: toggle_pause(self.state),
                 f"{IMAGE_BASE_PATH}/play.png",
                 f"{IMAGE_BASE_PATH}/pause.png",
+            ),
+            PushButton(
+                (60, YSIZE - 50),
+                (40, 40),
+                "step",
+                lambda: step(self.state),
+                f"{IMAGE_BASE_PATH}/step.png",
             )
         ]
 
@@ -67,7 +74,11 @@ class UI:
 
     def _draw_buttons(self):
         for button in self.buttons:
-            button.draw(self.screen)
+            if button.name == "step":
+                if self.state.simulation_paused:
+                    button.draw(self.screen)
+            else:
+                button.draw(self.screen)
 
     def _draw_static_elements(self):
         for element in self.static_elements.values():

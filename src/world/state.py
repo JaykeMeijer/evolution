@@ -9,6 +9,7 @@ from datastructures.quadtree import QuadTree
 class State:
     simulation_paused = False
     active: bool = True
+    perform_step: bool = False
     beasts: List["Beast"] = field(default_factory=list)
     tree: Optional[QuadTree] = None
 

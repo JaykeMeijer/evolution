@@ -3,8 +3,8 @@ from typing import Optional, Tuple, Callable
 
 import pygame
 
-from beast.brain.brain import Brain
 from simulation.render_helpers import draw_multiline_text
+from world.state import State
 
 
 class Element:
@@ -25,12 +25,20 @@ class Button(Element):
     def __init__(self, location: Tuple[int, int], size: Tuple[int, int], name: str, action: Callable):
         super().__init__(location, size, name)
         self.action = action
+        self.highlight_timer = 0
 
     def draw(self, screen: pygame.surface.Surface):
-        pygame.draw.rect(screen, (0, 0, 0), self.rect, width=2, border_radius=5)
+        if self.highlight_timer > 0:
+            color = (87, 165, 55)
+            self.highlight_timer -= 1
+        else:
+            color = (0, 0, 0)
+
+        pygame.draw.rect(screen, color, self.rect, width=2, border_radius=5)
 
     def on_click(self):
         self.action()
+        self.highlight_timer = 10
 
 
 class ToggleButton(Button):
@@ -60,6 +68,25 @@ class ToggleButton(Button):
         super().on_click()
         self.active = not self.active
 
+
+class PushButton(Button):
+    def __init__(
+        self,
+        location: Tuple[int, int],
+        size: Tuple[int, int],
+        name: str,
+        action: Callable,
+        image: str
+    ):
+        self.image = pygame.image.load(image)
+        super().__init__(location, size, name, action)
+
+    def draw(self, screen: pygame.surface.Surface):
+        super().draw(screen)
+        screen.blit(self.image, self.location)
+
+    def on_click(self):
+        super().on_click()
 
 class Popup(Element):
     def __init__(self, location: Tuple[int, int], size: Tuple[int, int], name: str):

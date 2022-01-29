@@ -33,7 +33,7 @@ def _game_loop():
     last_simulation_iteration = 0
 
     while state.active:
-        if not state.simulation_paused:
+        if not state.simulation_paused or state.perform_step:
             if time() - last_simulation_iteration > SIMULATION_STEP_TIME:
                 simulate_beasts()
 
@@ -42,6 +42,8 @@ def _game_loop():
 
                 time_for_step = time() - last_simulation_iteration
                 last_simulation_iteration = time()
+
+            state.perform_step = False
         else:
             sleep(0.1)
 
