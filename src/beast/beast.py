@@ -43,6 +43,8 @@ class Beast:
         self.mate_detection_range: int = 100  # TODO: Make genetic
         self.speed: int = 5  # TODO: Make genetic
 
+        self.selected: bool = False
+
     def stats_string(self) -> str:
         return (
             f"energy: {self.energy:.1f}\n"
@@ -52,6 +54,10 @@ class Beast:
             f"fertility: {self.fertility}\n"
             f"energy_consumption: {self.energy_consumption:.1f}\n"
             f"reproduction_cooldown: {self.base_reproduction_cooldown}\n"
+            f"-----------------------\n"
+            f"position: {self.position}\n"
+            f"rotation: {self.rotation}\n"
+            f"speed: {self.speed}\n"
         )
 
     def step(self, tree: QuadTree):
@@ -128,7 +134,10 @@ class Beast:
     def _draw_beast(self, screen: pygame.surface.Surface):
         tail_end = translate(self.position.tuple(), self.rotation - 180, 3 * self.size)
         pygame.draw.line(screen, (0, 0, 0), self.position.tuple(), tail_end, 3)
-        pygame.draw.circle(screen, (0, 0, 0), self.position.tuple(), self.size + 1)
+        if self.selected:
+            pygame.draw.circle(screen, (255, 0, 0), self.position.tuple(), self.size + 3)
+        else:
+            pygame.draw.circle(screen, (0, 0, 0), self.position.tuple(), self.size + 1)
         pygame.draw.circle(screen, self.color, self.position.tuple(), self.size)
 
     def _draw_dead(self, screen: pygame.surface.Surface):

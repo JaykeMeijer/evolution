@@ -1,5 +1,5 @@
 import math
-from typing import Dict, List, Tuple, cast
+from typing import Dict, List, Optional, Tuple, cast
 
 import matplotlib as mpl
 import pygame
@@ -22,6 +22,7 @@ class UI:
 
     def __init__(self, state: State):
         self.state = state
+        self.selected_beast: Optional[Beast] = None
 
         self.buttons: List[Button] = [
             ToggleButton(
@@ -93,6 +94,9 @@ class UI:
         for beast in self.state.beasts:
             if math.dist(beast.position.tuple(), pos) <= beast.size:
                 self._display_beast_stats(beast)
+                self._unselect_beast()
+                self.selected_beast = beast
+                beast.selected = True
                 return
 
         # Clicked on nothing
@@ -107,3 +111,9 @@ class UI:
     def _unselect_all(self):
         popup: Popup = cast(Popup, self.static_elements["beast_stats"])
         popup.shown = False
+        self._unselect_beast()
+
+    def _unselect_beast(self):
+        if self.selected_beast is not None:
+            self.selected_beast.selected = False
+            self.selected_beast = None
