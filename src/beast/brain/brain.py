@@ -1,10 +1,15 @@
+import math
 import random
-from typing import Dict, List, cast
+from typing import Any, Dict, Iterable, List, Tuple, cast
 
-from beast.brain.neuron import Connection, InputNeuron, InputType, Neuron, OutputNeuron, OutputType
+import networkx as nx
+import pygame
+
+from beast.brain.neuron import Connection, InputNeuron, InputType, InternalNeuron, Neuron, OutputNeuron, OutputType
 from beast.dna.dna import DNA
 from beast.dna.gene import NeuronConnectionGene
 from beast.interact import Action, InputSet, MoveForward, Noop, Turn
+from util.math_helpers import get_direction, translate
 
 
 class Brain:
@@ -32,11 +37,10 @@ class Brain:
         return self.output_neurons[neuron.neuron_type]
 
     def step(self, inputs: InputSet) -> List[Action]:
-        actions: List[Action] = []
-
         if inputs.all_none():
-            return actions
+            return []
 
+        actions: List[Action] = []
         for neuron in self.output_neurons.values():
             value = sum([
                 self._get_incoming_connection_value(connection.neuron_1, inputs) * connection.strength
@@ -72,3 +76,105 @@ class Brain:
             return Turn(round(value * 10))
         else:
             raise NotImplementedError(neuron.neuron_type)
+
+    def get_graph(self) -> nx.DiGraph:
+        G = nx.DiGraph()
+
+        for n in self.neuron_connections:
+            G.add_edge(n.neuron_1, n.neuron_2, strength=n.strength)
+
+        return G
+
+
+class BrainRenderer:
+    NODE_SIZE = 10
+    NEURON_COLORS = {
+        InputNeuron: "red",
+        InternalNeuron: "blue",
+        OutputNeuron: "green"
+    }
+    IMGSIZE = 300
+    MARGIN = 50
+    FIGSIZE = (3, 3)
+    DPI = 100
+
+    def __init__(self):
+        self.font = pygame.font.SysFont("Calibri", 8)
+
+    def draw_brain(self, brain) -> pygame.surface.Surface:
+        graph = brain.get_graph()
+
+        colors = {node: self.NEURON_COLORS[type(node)] for node in graph.nodes()}
+        labels = {node: node.neuron_type.name for node in graph.nodes()}
+        edge_labels = {(n1, n2): f"{graph[n1][n2]['strength']:.2f}" for n1, n2 in graph.edges()}
+        pos = nx.planar_layout(graph, scale=(self.IMGSIZE / 2) - self.MARGIN, center=(self.IMGSIZE/2, self.IMGSIZE/2))
+
+        surface = pygame.Surface((self.IMGSIZE, self.IMGSIZE))
+        surface.fill("white")
+        self._draw_nodes(surface, graph.nodes(), pos, colors)
+        self._draw_node_labels(surface, graph.nodes(), pos, labels)
+        self._draw_edges(surface, graph.edges(), pos)
+        self._draw_edge_labels(surface, graph.edges(), pos, edge_labels)
+        return surface
+
+    def _draw_nodes(
+        self,
+        surface: pygame.surface.Surface,
+        nodes: Iterable[Neuron],
+        pos: Dict[Neuron, Tuple[int, int]],
+        colors: Dict[Any, str]
+    ):
+        for node in nodes:
+            pygame.draw.circle(
+                surface,
+                colors[node],
+                pos[node],
+                self.NODE_SIZE,
+            )
+
+    def _draw_node_labels(
+        self,
+        surface: pygame.surface.Surface,
+        nodes: Iterable[Any],
+        pos: Dict[Any, Tuple[int, int]],
+        labels: Dict[Any, str]
+    ):
+        for node in nodes:
+            position = pos[node]
+            label = self.font.render(labels[node], True, (0, 0, 0))
+            surface.blit(label, (position[0] - label.get_width() / 2, position[1] + self.font.get_linesize()))
+
+    def _draw_edges(
+        self,
+        surface: pygame.surface.Surface,
+        edges: Iterable[Tuple[Any, Any]],
+        pos: Dict[Any, Tuple[int, int]]
+    ):
+        for node1, node2 in edges:
+            direction = get_direction(pos[node1], pos[node2])
+            begin = translate(pos[node1], direction, self.NODE_SIZE + 1)
+            end = translate(pos[node2], direction, -self.NODE_SIZE + 1)
+            pygame.draw.aaline(surface, "black", begin, end)
+            pygame.draw.polygon(
+                surface,
+                "black",
+                (
+                    (end),
+                    (translate(end, direction + 135, 5)),
+                    (translate(end, direction - 135, 5)),
+                )
+            )
+
+    def _draw_edge_labels(
+        self,
+        surface: pygame.surface.Surface,
+        edges: Iterable[Tuple[Any, Any]],
+        pos: Dict[Any, Tuple[int, int]],
+        labels: Dict[Tuple[Any, Any], str],
+    ):
+        for node1, node2 in edges:
+            direction = get_direction(pos[node1], pos[node2])
+            distance = math.dist(pos[node1], pos[node2])
+            position = translate(pos[node1], direction, distance / 2)
+            label = self.font.render(labels[(node1, node2)], True, (0, 0, 0))
+            surface.blit(label, (position[0] - label.get_width() / 2, position[1] + self.font.get_linesize()))

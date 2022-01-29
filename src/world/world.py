@@ -4,6 +4,7 @@ import random
 from typing import Tuple
 
 from simulation.ui_constants import XSIZE, YSIZE
+from util.math_helpers import translate
 
 BORDER_BUFFER = 10
 XLIMIT = XSIZE - BORDER_BUFFER
@@ -33,11 +34,3 @@ class Position:
 
 def distance(a: Position, b: Position) -> float:
     return math.dist(a.tuple(), b.tuple())
-
-
-def translate(start: Tuple[int, int], direction: int, distance: int) -> Tuple[int, int]:
-    radians = math.radians(direction)
-    return (
-        round(start[0] + math.sin(radians) * distance),
-        round(start[1] - math.cos(radians) * distance)
-    )

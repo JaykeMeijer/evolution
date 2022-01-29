@@ -8,6 +8,7 @@ from beast.brain.brain import Brain
 from beast.dna.dna import DNA
 from beast.interact import Action, InputSet, MoveForward, Turn
 from datastructures.quadtree import QuadTree, QuadTreePoint
+from util.math_helpers import get_direction
 from world.world import Position, translate
 
 
@@ -96,10 +97,9 @@ class Beast:
                 if nearest_mate else None
             ),
             direction_of_nearest_mate=(
-                math.degrees(
-                    math.atan2((self.position.x - nearest_mate.position.x), (self.position.y - nearest_mate.position.y))
-                )
-                if nearest_mate else None
+                get_direction(self.position.tuple(), nearest_mate.position.tuple())
+                if nearest_mate
+                else None
             )
         )
 

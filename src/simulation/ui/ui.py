@@ -1,14 +1,22 @@
 import math
+from typing import Any, Dict, Iterable, List, Tuple, cast
+from beast.brain.neuron import InputNeuron, InputType, InternalNeuron, Neuron, OutputNeuron, OutputType
+
+import networkx as nx
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 import pygame
-from typing import Dict, List, Tuple, cast
 
 from beast.beast import Beast
+from beast.brain.brain import Brain, BrainRenderer
 from simulation.render_helpers import draw_multiline_text
 from simulation.ui_constants import XSIZE, YSIZE
 from simulation.ui.interactions import toggle_pause
-from simulation.ui.ui_elements import Button, Element, Popup, ToggleButton
+from simulation.ui.ui_elements import Button, Element, Image, Popup, ToggleButton
+from util.math_helpers import get_direction, translate
 from world.state import State
 
+mpl.use('Agg')
 
 IMAGE_BASE_PATH = "../assets/images/ui"
 
@@ -35,6 +43,7 @@ class UI:
                 (XSIZE - 320, 20), (300, YSIZE - 40), "beast_stats"
             )
         }
+        self.brain_renderer = BrainRenderer()
 
     def set_screen(self, screen: pygame.surface.Surface):
         self.screen = screen
@@ -85,6 +94,7 @@ class UI:
     def _display_beast_stats(self, beast: Beast):
         popup: Popup = cast(Popup, self.static_elements["beast_stats"])
         popup.set_text_dynamic(beast.stats_string)
+        popup.set_image(self.brain_renderer.draw_brain(beast.brain))
         popup.shown = True
 
     def _unselect_all(self):

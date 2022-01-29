@@ -1,6 +1,7 @@
 from dataclasses import dataclass
-from enum import Enum, auto
-from typing import List, cast
+from enum import Enum
+from random import randint
+from typing import List, Union, cast
 
 from beast.dna.gene import NeuronConnectionGene
 
@@ -16,10 +17,15 @@ class OutputType(Enum):
     MOVE_FORWARD = 1
 
 
+NeuronType = Union[InputType, OutputType]
+
+
 class Neuron:
     def __init__(self):
         self.incoming_connections: List["Connection"] = []
         self.outgoing_connections: List["Connection"] = []
+        self.neuron_type: NeuronType = "Not Implemented"
+        self.id: int = randint(100000, 9999999)
 
     def merge(self, other: "Neuron"):
         self.incoming_connections += other.incoming_connections
@@ -27,6 +33,9 @@ class Neuron:
 
     def __str__(self) -> str:
         raise NotImplementedError
+
+    def __hash__(self) -> int:
+        return hash(self.id)
 
 
 class InputNeuron(Neuron):
@@ -46,7 +55,6 @@ class InternalNeuron(Neuron):
         return f"InternalNeuron <{id(self)}>"
 
 
-@dataclass
 class OutputNeuron(Neuron):
     def __init__(self, neuron_type: OutputType):
         super().__init__()

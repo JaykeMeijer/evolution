@@ -1,9 +1,10 @@
+from dataclasses import dataclass
 from typing import Optional, Tuple, Callable
 
 import pygame
 
+from beast.brain.brain import Brain
 from simulation.render_helpers import draw_multiline_text
-
 
 
 class Element:
@@ -64,10 +65,11 @@ class Popup(Element):
     def __init__(self, location: Tuple[int, int], size: Tuple[int, int], name: str):
         super().__init__(location, size, name)
 
-        self.shown = False
-        self.text = ""
+        self.shown: bool = False
+        self.text: str = ""
         self.text_dynamic: Optional[Callable] = None
-        self.font = pygame.font.SysFont("Calibri", 18)
+        self.font: pygame.font = pygame.font.SysFont("Calibri", 18)
+        self.image: Optional[pygame.surface.Surface] = None
 
     def set_text(self, text: str):
         self.text = text
@@ -75,6 +77,9 @@ class Popup(Element):
 
     def set_text_dynamic(self, text_function: Callable):
         self.text_dynamic = text_function
+
+    def set_image(self, image: pygame.surface.Surface):
+        self.image = image
 
     def draw(self, screen: pygame.surface.Surface):
         if self.shown:
@@ -85,3 +90,13 @@ class Popup(Element):
             else:
                 text = self.text
             draw_multiline_text(screen, text, (self.location[0] + 10, self.location[1] + 10), self.font)
+
+            if self.image is not None:
+                screen.blit(self.image, (self.location[0], self.location[1] + 300))
+
+
+@dataclass
+class Image:
+    size: Tuple[int, int]
+    data: bytes
+    format: str = "RGB"
