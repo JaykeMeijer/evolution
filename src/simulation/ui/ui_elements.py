@@ -68,7 +68,7 @@ class Popup(Element):
         self.shown: bool = False
         self.text: str = ""
         self.text_dynamic: Optional[Callable] = None
-        self.font: pygame.font = pygame.font.SysFont("Calibri", 18)
+        self.font: pygame.font.Font = pygame.font.SysFont("Calibri", 18)
         self.image: Optional[pygame.surface.Surface] = None
 
     def set_text(self, text: str):

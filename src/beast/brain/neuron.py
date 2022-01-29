@@ -41,7 +41,7 @@ class Neuron:
 class InputNeuron(Neuron):
     def __init__(self, neuron_type: InputType):
         super().__init__()
-        self.neuron_type = neuron_type
+        self.neuron_type: InputType = neuron_type
 
     def __str__(self) -> str:
         return f"InputNeuron {self.neuron_type} <{id(self)}>"
@@ -58,7 +58,7 @@ class InternalNeuron(Neuron):
 class OutputNeuron(Neuron):
     def __init__(self, neuron_type: OutputType):
         super().__init__()
-        self.neuron_type = neuron_type
+        self.neuron_type: OutputType = neuron_type
 
     def __str__(self) -> str:
         return f"OutputNeuron {self.neuron_type} <{id(self)}>"
