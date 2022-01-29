@@ -120,4 +120,4 @@ class Popup(Element):
             draw_multiline_text(screen, text, (self.location[0] + 10, self.location[1] + 10), self.font)
 
             if self.image is not None:
-                screen.blit(self.image, (self.location[0], self.location[1] + 300))
+                screen.blit(self.image, (self.location[0], self.location[1] + 500))

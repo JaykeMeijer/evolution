@@ -27,6 +27,9 @@ class Position:
     def copy(self) -> "Position":
         return Position(self.x, self.y)
 
+    def __str__(self):
+        return f"({self.x}, {self.y})"
+
     @staticmethod
     def random() -> "Position":
         return Position(random.randint(0, XSIZE), random.randint(0, YSIZE))

@@ -45,6 +45,8 @@ class Beast:
 
         self.selected: bool = False
 
+        self.input_set: Optional[InputSet] = None
+
     def stats_string(self) -> str:
         return (
             f"energy: {self.energy:.1f}\n"
@@ -58,6 +60,8 @@ class Beast:
             f"position: {self.position}\n"
             f"rotation: {self.rotation}\n"
             f"speed: {self.speed}\n"
+            f"-----------------------\n"
+            f"inputs: {self.input_set}\n"
         )
 
     def step(self, tree: QuadTree):
@@ -97,8 +101,8 @@ class Beast:
 
     def _get_inputs(self, tree: QuadTree) -> InputSet:
         nearest_mate = self._find_nearest_mate(tree)
-        
-        return InputSet(
+
+        input_set = InputSet(
             distance_to_nearest_mate=(
                 math.dist(self.position.tuple(), nearest_mate.position.tuple())
                 if nearest_mate else None
@@ -108,6 +112,8 @@ class Beast:
                 if nearest_mate is not None else None
             ),
         )
+        self.input_set = input_set
+        return input_set
 
     def _get_relative_direction(self, mate: "Beast") -> int:
         relative_direction = (

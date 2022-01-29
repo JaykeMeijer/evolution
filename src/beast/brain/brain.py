@@ -73,7 +73,7 @@ class Brain:
         if neuron.neuron_type == OutputType.MOVE_FORWARD:
             return MoveForward() if value != 0 else Noop()
         elif neuron.neuron_type == OutputType.TURN:
-            return Turn(round(value * 10))
+            return Turn(round(value))
         else:
             raise NotImplementedError(neuron.neuron_type)
 
