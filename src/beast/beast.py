@@ -7,7 +7,7 @@ import pygame
 from beast.brain.brain import Brain
 from beast.dna.dna import DNA
 from beast.interact import Action, InputSet, MoveForward, Turn
-from datastructures.quadtree import QuadTree, QuadTreePoint
+from datastructures.quadtree import QuadTree
 from util.math_helpers import get_direction
 from world.world import Position, translate
 
