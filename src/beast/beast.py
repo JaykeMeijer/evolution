@@ -1,6 +1,6 @@
 import math
 import random
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Union
 
 import pygame
 
@@ -97,17 +97,27 @@ class Beast:
 
     def _get_inputs(self, tree: QuadTree) -> InputSet:
         nearest_mate = self._find_nearest_mate(tree)
+        
         return InputSet(
             distance_to_nearest_mate=(
                 math.dist(self.position.tuple(), nearest_mate.position.tuple())
                 if nearest_mate else None
             ),
             direction_of_nearest_mate=(
-                get_direction(self.position.tuple(), nearest_mate.position.tuple())
-                if nearest_mate
-                else None
-            )
+                self._get_relative_direction(nearest_mate)
+                if nearest_mate is not None else None
+            ),
         )
+
+    def _get_relative_direction(self, mate: "Beast") -> int:
+        relative_direction = (
+            get_direction(self.position.tuple(), mate.position.tuple()) - self.rotation
+        )
+        if relative_direction > 180:
+            relative_direction -= 360
+        elif relative_direction < - 180:
+            relative_direction += 360
+        return relative_direction
 
     def _find_nearest_mate(self, tree: QuadTree) -> Optional["Beast"]:
         nearby_mates = tree.points_in_range(self.position.tuple(), 100)
