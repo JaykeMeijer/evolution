@@ -1,5 +1,6 @@
 import pygame
 
+from evolution.simulation.keyevents import handle_key_press
 from evolution.simulation.ui.ui import UI
 from evolution.world.state import State
 
@@ -20,3 +21,5 @@ class EventLoop:
             self.state.active = False
         elif event.type == pygame.MOUSEBUTTONUP:
             self.ui.handle_mouse_click(pygame.mouse.get_pos())
+        elif event.type == pygame.KEYUP:
+            handle_key_press(event.key, self.state, self.ui)

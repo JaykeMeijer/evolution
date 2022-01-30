@@ -107,18 +107,27 @@ class UI:
         # Clicked on nothing
         self._unselect_all()
 
+    def handle_escape(self):
+        item_closed = self._unselect_all()
+        if not item_closed:
+            self.state.active = False
+
     def _display_beast_stats(self, beast: Beast):
         popup: BeastPopup = cast(BeastPopup, self.static_elements["beast_stats"])
         popup.set_text_dynamic(beast.stats_string)
         popup.set_image(self.brain_renderer.draw_brain(beast.brain))
         popup.shown = True
 
-    def _unselect_all(self):
+    def _unselect_all(self) -> bool:
+        closed = False
         for item in self.static_elements.values():
             if isinstance(item, Popup):
-                item.shown = False
+                if item.shown:
+                    item.shown = False
+                    closed = True
 
         self._unselect_beast()
+        return closed
 
     def _unselect_beast(self):
         if self.selected_beast is not None:

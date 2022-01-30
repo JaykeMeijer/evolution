@@ -35,4 +35,4 @@ class Render:
 
     def _draw_beasts(self):
         for beast in self.state.beasts:
-            beast.draw(self.screen)
+            beast.draw(self.screen, self.state.render_nearest_mate)

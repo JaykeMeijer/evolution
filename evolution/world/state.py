@@ -13,5 +13,7 @@ class State:
     beasts: List["Beast"] = field(default_factory=list)
     tree: Optional[QuadTree] = None
 
+    render_nearest_mate: bool = True
+
 
 state = State()

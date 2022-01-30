@@ -8,6 +8,7 @@ from evolution.beast.brain.brain import Brain
 from evolution.beast.dna.dna import DNA
 from evolution.beast.interact import Action, InputSet, MoveForward, Turn
 from evolution.datastructures.quadtree import QuadTree
+from evolution.simulation.render_helpers import draw_dashed_line
 from evolution.util.math_helpers import get_direction
 from evolution.world.world import Position, translate
 
@@ -50,12 +51,15 @@ class Beast:
         self.selected: bool = False
 
         self.input_set: Optional[InputSet] = None
+        self.nearest_mate: Optional[Beast] = None
 
     def __str__(self):
         return f"Beast {self.id} (dead status {self.dead})"
 
     def stats_string(self) -> str:
         return (
+            f"Beast {self.id}\n"
+            f"-----------------------\n"
             f"energy: {self.energy:.1f}\n"
             f"reproduction_cooldown: {self.reproduction_cooldown}\n"
             f"-----------------------\n"
@@ -108,6 +112,7 @@ class Beast:
 
     def _get_inputs(self, tree: QuadTree) -> InputSet:
         nearest_mate = self._find_nearest_mate(tree)
+        self.nearest_mate = nearest_mate
 
         input_set = InputSet(
             distance_to_nearest_mate=(
@@ -142,13 +147,17 @@ class Beast:
             ]
             return nearby_mates_sorted[1]
 
-    def draw(self, screen: pygame.surface.Surface):
+    def draw(self, screen: pygame.surface.Surface, render_nearest_mate: bool = False):
         if self.dead > 0:
             self._draw_dead(screen)
         else:
             self._draw_beast(screen)
+            if render_nearest_mate:
+                self._draw_to_nearest_mate(screen)
+
 
     def _draw_beast(self, screen: pygame.surface.Surface):
+
         tail_end = translate(self.position.tuple(), self.rotation - 180, 3 * self.size)
         pygame.draw.line(screen, (0, 0, 0), self.position.tuple(), tail_end, 3)
         if self.selected:
@@ -164,6 +173,10 @@ class Beast:
         pygame.draw.line(
             screen, color, (self.position.x - 3, self.position.y + 3), (self.position.x + 3, self.position.y + 3), 3
         )
+
+    def _draw_to_nearest_mate(self, screen: pygame.surface.Surface):
+        if self.nearest_mate is not None:
+            draw_dashed_line(screen, self.color, self.position.tuple(), self.nearest_mate.position.tuple(), 1)
 
     def reset_reproduction_cooldown(self):
         self.reproduction_cooldown = self.base_reproduction_cooldown
