@@ -12,6 +12,7 @@ MAX_REPLICATION_DISTANCE = 15
 
 def simulate_beasts():
     tree = _get_quad_tree()
+    state.tree = tree
     _simulate_beasts(tree)
     state.beasts += _simulate_reproduction(tree)
 

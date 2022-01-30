@@ -101,7 +101,7 @@ class BrainRenderer:
     def __init__(self):
         self.font = pygame.font.SysFont("Calibri", 8)
 
-    def draw_brain(self, brain) -> pygame.surface.Surface:
+    def draw_brain(self, brain: Brain) -> pygame.surface.Surface:
         graph = brain.get_graph()
 
         colors = {node: self.NEURON_COLORS[type(node)] for node in graph.nodes()}

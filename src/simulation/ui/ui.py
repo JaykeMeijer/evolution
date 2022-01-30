@@ -9,8 +9,10 @@ from beast.brain.brain import BrainRenderer
 from simulation.render_helpers import draw_multiline_text
 from simulation.ui_constants import XSIZE, YSIZE
 from simulation.ui.interactions import toggle_pause, step
-from simulation.ui.ui_elements import Button, Element, Popup, PushButton, ToggleButton
-from world.state import State
+from simulation.ui.ui_elements import BeastPopup, Button, Element, Popup, PushButton, ToggleButton
+from simulation.ui.ui_elements import TreePopup
+from util.render_tree import render
+from world.state import State, state
 
 mpl.use('Agg')
 
@@ -39,13 +41,19 @@ class UI:
                 "step",
                 lambda: step(self.state),
                 f"{IMAGE_BASE_PATH}/step.png",
-            )
+            ),
+            PushButton(
+                (110, YSIZE - 50),
+                (40, 40),
+                "tree",
+                self._show_tree,
+                f"{IMAGE_BASE_PATH}/step.png",
+            ),
         ]
 
         self.static_elements: Dict[str, Element] = {
-            "beast_stats": Popup(
-                (XSIZE - 320, 20), (300, YSIZE - 40), "beast_stats"
-            )
+            "beast_stats": BeastPopup(),
+            "tree": TreePopup(),
         }
         self.brain_renderer = BrainRenderer()
 
@@ -109,11 +117,18 @@ class UI:
         popup.shown = True
 
     def _unselect_all(self):
-        popup: Popup = cast(Popup, self.static_elements["beast_stats"])
-        popup.shown = False
+        for item in self.static_elements.values():
+            if isinstance(item, Popup):
+                item.shown = False
+
         self._unselect_beast()
 
     def _unselect_beast(self):
         if self.selected_beast is not None:
             self.selected_beast.selected = False
             self.selected_beast = None
+
+    def _show_tree(self):
+        tree_popup = cast(TreePopup, self.static_elements["tree"])
+        tree_popup.set_image(render(self.state.tree))
+        tree_popup.shown = True

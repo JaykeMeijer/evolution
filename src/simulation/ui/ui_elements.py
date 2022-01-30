@@ -1,10 +1,9 @@
-from dataclasses import dataclass
 from typing import Optional, Tuple, Callable
 
 import pygame
 
 from simulation.render_helpers import draw_multiline_text
-from world.state import State
+from simulation.ui_constants import XSIZE, YSIZE
 
 
 class Element:
@@ -94,6 +93,17 @@ class Popup(Element):
         super().__init__(location, size, name)
 
         self.shown: bool = False
+
+    def draw(self, screen: pygame.surface.Surface):
+        if self.shown:
+            pygame.draw.rect(screen, (0, 0, 0), self.border_rect, width=1, border_radius=5)
+            pygame.draw.rect(screen, (255, 255, 255), self.rect, border_radius=5)
+
+
+class BeastPopup(Popup):
+    def __init__(self):
+        super().__init__((XSIZE - 320, 20), (300, YSIZE - 40), "beast_stats")
+
         self.text: str = ""
         self.text_dynamic: Optional[Callable] = None
         self.font: pygame.font.Font = pygame.font.SysFont("Calibri", 18)
@@ -110,9 +120,8 @@ class Popup(Element):
         self.image = image
 
     def draw(self, screen: pygame.surface.Surface):
+        super().draw(screen)
         if self.shown:
-            pygame.draw.rect(screen, (0, 0, 0), self.border_rect, width=1, border_radius=5)
-            pygame.draw.rect(screen, (255, 255, 255), self.rect, border_radius=5)
             if self.text_dynamic is not None:
                 text = self.text_dynamic()
             else:
@@ -121,3 +130,18 @@ class Popup(Element):
 
             if self.image is not None:
                 screen.blit(self.image, (self.location[0], self.location[1] + 500))
+
+
+class TreePopup(Popup):
+    def __init__(self):
+        super().__init__((20, 20), (XSIZE - 40, YSIZE - 40), "tree")
+        self.image: Optional[pygame.surface.Surface] = None
+
+    def set_image(self, image: pygame.surface.Surface):
+        self.image = image
+
+    def draw(self, screen: pygame.surface.Surface):
+        super().draw(screen)
+        if self.shown:
+            if self.image is not None:
+                screen.blit(self.image, self.location)
