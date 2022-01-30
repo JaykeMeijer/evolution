@@ -1,4 +1,5 @@
 import math
+import threading
 from typing import Dict, List, Optional, Tuple, cast
 
 import pygame
@@ -44,7 +45,7 @@ class UI:
                 (40, 40),
                 "tree",
                 self._show_tree,
-                f"{IMAGE_BASE_PATH}/step.png",
+                f"{IMAGE_BASE_PATH}/tree.png",
             ),
         ]
 
@@ -125,7 +126,15 @@ class UI:
             self.selected_beast.selected = False
             self.selected_beast = None
 
-    def _show_tree(self):
+    def _tree_thread(self):
         tree_popup = cast(TreePopup, self.static_elements["tree"])
         tree_popup.set_image(render(self.state.tree))
         tree_popup.shown = True
+
+    def _show_tree(self):
+        if any([t.name == "tree_rendering" for t in threading.enumerate()]):
+            print("Tree already being rendered - skipping")
+            return
+
+        thread = threading.Thread(target=self._tree_thread, name="tree_rendering")
+        thread.start()

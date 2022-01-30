@@ -1,5 +1,5 @@
 from time import time, sleep
-from threading import Thread
+from threading import Thread, current_thread
 
 import matplotlib as mpl
 import pygame
@@ -64,8 +64,9 @@ def _event_loop():
 
 def run_simulation():
     print("Running simulation")
-    simulation_thread = Thread(target=_game_loop)
-    render_thread = Thread(target=_render_loop)
+    simulation_thread = Thread(target=_game_loop, name="simulation")
+    render_thread = Thread(target=_render_loop, name="render")
+    current_thread().setName("event")
     simulation_thread.start()
     render_thread.start()
 

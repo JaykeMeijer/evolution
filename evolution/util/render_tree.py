@@ -11,12 +11,12 @@ from evolution.datastructures.quadtree import QuadTree, QuadTreePoint
 
 
 def render(tree: QuadTree):
-    print(tree.num_points())
     G = nx.DiGraph()
     _add_to_graph(tree, G)
     pos = hierarchy_pos(G, width = 2*math.pi, xcenter=0)
     pos = {u:(r*math.cos(theta),r*math.sin(theta)) for u, (theta, r) in pos.items()}
     fig = plt.figure(0, (4, 4), dpi=200)
+    fig.clear()
     nx.draw(
         G,
         pos,
