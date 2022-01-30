@@ -46,7 +46,7 @@ class QuadTree:
         return QuadTree(rect, self.depth + 1, parent=self)
 
     def insert(self, point: QuadTreePoint) -> None:
-        if self.subtrees is None and len(self.points) < MAX_POINTS:
+        if self.subtrees is None and (len(self.points) < MAX_POINTS or self.depth > 10):
             self.points.append(point)
         else:
             if self.subtrees is None:
