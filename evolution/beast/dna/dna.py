@@ -1,6 +1,6 @@
 import random
 
-from beast.dna.gene import DNA_LENGTH, Gene, get_gene
+from evolution.beast.dna.gene import DNA_LENGTH, Gene, get_gene
 
 
 class DNA:

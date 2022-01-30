@@ -1,6 +1,6 @@
 import pytest
-from beast.beast import Beast
-from world.world import Position
+from evolution.beast.beast import Beast
+from evolution.world.world import Position
 
 
 @pytest.mark.parametrize(

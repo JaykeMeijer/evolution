@@ -2,10 +2,10 @@ from typing import List
 
 from pygame.rect import Rect
 
-from beast.beast import Beast
-from datastructures.quadtree import QuadTree, QuadTreePoint
-from world.state import state
-from simulation.ui_constants import XSIZE, YSIZE
+from evolution.beast.beast import Beast
+from evolution.datastructures.quadtree import QuadTree, QuadTreePoint
+from evolution.world.state import state
+from evolution.simulation.ui_constants import XSIZE, YSIZE
 
 MAX_REPLICATION_DISTANCE = 15
 

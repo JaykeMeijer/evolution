@@ -1,21 +1,23 @@
 from time import time, sleep
 from threading import Thread
 
+import matplotlib as mpl
 import pygame
 
-from beast.beast import Beast
-from beast.simulate import simulate_beasts
-from simulation.events import EventLoop
-from world.state import state
-from simulation.events import EventLoop
-from simulation.render import Render
-from simulation.ui.ui import UI
+from evolution.beast.beast import Beast
+from evolution.beast.simulate import simulate_beasts
+from evolution.simulation.events import EventLoop
+from evolution.world.state import state
+from evolution.simulation.events import EventLoop
+from evolution.simulation.render import Render
+from evolution.simulation.ui.ui import UI
 
 NUM_BEASTS = 50
 SIMULATION_STEP_TIME = 0.01
 
 pygame.init()
 pygame.font.init()
+mpl.use('Agg')
 
 ui = UI(state)
 render = Render(state, ui)

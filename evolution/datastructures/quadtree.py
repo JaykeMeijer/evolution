@@ -17,6 +17,9 @@ class QuadTreePoint:
     def coord(self) -> Tuple[int, int]:
         return (self.x, self.y)
 
+    def __str__(self):
+        return f"({self.x}, {self.y}) - {self.obj}"
+
 
 class QuadTree:
     subtrees: Optional[Tuple["QuadTree", "QuadTree", "QuadTree", "QuadTree"]] = None
@@ -36,6 +39,10 @@ class QuadTree:
             self._subtree(Rect(self.area.x, self.area.y + width, width, height)),
             self._subtree(Rect(self.area.x + width, self.area.y + height, width, height)),
         )
+
+    def num_points(self):
+        subtree_count = sum([subtree.num_points() for subtree in self.subtrees]) if self.subtrees is not None else 0
+        return subtree_count + len(self.points)
 
     def _subtree(self, rect: Rect) -> "QuadTree":
         return QuadTree(rect, self.depth + 1, parent=self)
@@ -82,3 +89,23 @@ class QuadTree:
             for point in self.points
             if boundary.collidepoint(point.coord()) and math.dist(location, point.coord()) <= range
         ]
+
+    def __str__(self):
+        return self.print()
+
+    def print(self, tab=0):
+        out_lines = []
+        tab_str = " " * tab * 2
+        out_lines.append(f"{tab_str}+ Subtree point - {self._printable_rect(self.area)}")
+        for p in self.points:
+            out_lines.append(f"{tab_str}  - {p}")
+        
+        if self.subtrees is not None:
+            for s in self.subtrees:
+                out_lines.append(s.print(tab + 1))
+
+        return "\n".join(out_lines)
+
+    @staticmethod
+    def _printable_rect(rect):
+        return f"X-range: {rect[0]}-{rect[0] + rect[2]}, Y-range: {rect[1]}-{rect[1] + rect[3]}"

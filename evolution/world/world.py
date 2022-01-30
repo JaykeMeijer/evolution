@@ -3,8 +3,8 @@ import math
 import random
 from typing import Tuple
 
-from simulation.ui_constants import XSIZE, YSIZE
-from util.math_helpers import translate
+from evolution.simulation.ui_constants import XSIZE, YSIZE
+from evolution.util.math_helpers import translate
 
 BORDER_BUFFER = 10
 XLIMIT = XSIZE - BORDER_BUFFER

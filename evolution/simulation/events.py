@@ -1,7 +1,7 @@
 import pygame
 
-from simulation.ui.ui import UI
-from world.state import State
+from evolution.simulation.ui.ui import UI
+from evolution.world.state import State
 
 
 class EventLoop:

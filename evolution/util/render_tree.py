@@ -6,11 +6,12 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import pygame
 
-from beast.beast import Beast
-from datastructures.quadtree import QuadTree, QuadTreePoint
+from evolution.beast.beast import Beast
+from evolution.datastructures.quadtree import QuadTree, QuadTreePoint
 
 
-def render(tree):
+def render(tree: QuadTree):
+    print(tree.num_points())
     G = nx.DiGraph()
     _add_to_graph(tree, G)
     pos = hierarchy_pos(G, width = 2*math.pi, xcenter=0)
@@ -49,6 +50,7 @@ def _get_node_color(node: Union[QuadTree, QuadTreePoint]) -> Tuple[float, float,
     if type(node) == QuadTree:
         return (0, 0, 0)
     else:
+        assert isinstance(node, QuadTreePoint)
         assert isinstance(node.obj, Beast)
         c = node.obj.color
         return (c[0] / 255.0, c[1] / 255.0, c[2] / 255.0)

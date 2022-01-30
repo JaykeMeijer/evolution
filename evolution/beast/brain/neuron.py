@@ -3,7 +3,7 @@ from enum import Enum
 from random import randint
 from typing import List, Union, cast
 
-from beast.dna.gene import NeuronConnectionGene
+from evolution.beast.dna.gene import NeuronConnectionGene
 
 
 class InputType(Enum):

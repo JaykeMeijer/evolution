@@ -4,18 +4,20 @@ from typing import List, Tuple, Optional, Union
 
 import pygame
 
-from beast.brain.brain import Brain
-from beast.dna.dna import DNA
-from beast.interact import Action, InputSet, MoveForward, Turn
-from datastructures.quadtree import QuadTree
-from util.math_helpers import get_direction
-from world.world import Position, translate
+from evolution.beast.brain.brain import Brain
+from evolution.beast.dna.dna import DNA
+from evolution.beast.interact import Action, InputSet, MoveForward, Turn
+from evolution.datastructures.quadtree import QuadTree
+from evolution.util.math_helpers import get_direction
+from evolution.world.world import Position, translate
 
 
 DESPAWN_TIME = 50
+beast_counter = 0
 
 
 class Beast:
+    id: int
     brain: Brain
     dna: DNA
     reproduction_cooldown: int = 0
@@ -24,6 +26,9 @@ class Beast:
     position: Position
 
     def __init__(self, dna: DNA = None, position: Position = None, parents: Tuple["Beast", "Beast"] = None):
+        global beast_counter
+        self.id = beast_counter
+        beast_counter += 1
         self.dna = dna if dna else DNA()
         self.position = position if position else Position.random()
 
@@ -46,6 +51,9 @@ class Beast:
         self.selected: bool = False
 
         self.input_set: Optional[InputSet] = None
+
+    def __str__(self):
+        return f"Beast {self.id} (dead status {self.dead})"
 
     def stats_string(self) -> str:
         return (

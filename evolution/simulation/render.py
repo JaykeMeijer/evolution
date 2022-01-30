@@ -1,9 +1,9 @@
 import pygame
 from time import time
 
-from simulation.ui.ui import UI
-from world.state import State
-from world.world import XSIZE, YSIZE
+from evolution.simulation.ui.ui import UI
+from evolution.world.state import State
+from evolution.world.world import XSIZE, YSIZE
 
 
 FRAME_LIMIT = 1/1000

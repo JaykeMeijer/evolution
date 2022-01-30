@@ -5,11 +5,11 @@ from typing import Any, Dict, Iterable, List, Tuple, cast
 import networkx as nx
 import pygame
 
-from beast.brain.neuron import Connection, InputNeuron, InputType, InternalNeuron, Neuron, OutputNeuron, OutputType
-from beast.dna.dna import DNA
-from beast.dna.gene import NeuronConnectionGene
-from beast.interact import Action, InputSet, MoveForward, Noop, Turn
-from util.math_helpers import get_direction, translate
+from evolution.beast.brain.neuron import Connection, InputNeuron, InputType, InternalNeuron, Neuron, OutputNeuron, OutputType
+from evolution.beast.dna.dna import DNA
+from evolution.beast.dna.gene import NeuronConnectionGene
+from evolution.beast.interact import Action, InputSet, MoveForward, Noop, Turn
+from evolution.util.math_helpers import get_direction, translate
 
 
 class Brain:

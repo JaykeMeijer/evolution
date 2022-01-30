@@ -2,8 +2,8 @@ from typing import Optional, Tuple, Callable
 
 import pygame
 
-from simulation.render_helpers import draw_multiline_text
-from simulation.ui_constants import XSIZE, YSIZE
+from evolution.simulation.render_helpers import draw_multiline_text
+from evolution.simulation.ui_constants import XSIZE, YSIZE
 
 
 class Element:

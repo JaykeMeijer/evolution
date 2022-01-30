@@ -1,5 +1,4 @@
 from dataclasses import dataclass, field
-import dataclasses
 from typing import Any, Dict, Tuple, Type
 
 DNA_LENGTH = 128
@@ -86,7 +85,7 @@ class DNAStructure:
 
 dna_structure: Dict[str, DNAStructure] = {
     "base_energy": DNAStructure(0, IntGene, {"min": 100, "max": 750}),
-    "energy_consumption": DNAStructure(8, FloatGene, {"min": 0.5, "max": 1.5}),
+    "energy_consumption": DNAStructure(8, FloatGene, {"min": 0.5, "max": 10.5}),
     "size": DNAStructure(16, IntGene, {"min": 3, "max": 10}),
     "color": DNAStructure(24, Tuple3Gene, {}),
     "reproduction_cooldown": DNAStructure(32, IntGene, {"min": 50, "max": 150}),

@@ -1,4 +1,4 @@
-from world.state import State
+from evolution.world.state import State
 
 
 def toggle_pause(state: State):

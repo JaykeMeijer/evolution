@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-from beast.beast import Beast
-from datastructures.quadtree import QuadTree
+from evolution.beast.beast import Beast
+from evolution.datastructures.quadtree import QuadTree
 
 
 @dataclass
