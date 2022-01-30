@@ -72,7 +72,7 @@ class Brain:
         if neuron.neuron_type == InputType.MATE_DISTANCE:
             return inputs.distance_to_nearest_mate if inputs.distance_to_nearest_mate else 0
         elif neuron.neuron_type == InputType.MATE_DIRECTION:
-            return inputs.direction_of_nearest_mate if inputs.direction_of_nearest_mate else 0
+            return (1 / inputs.direction_of_nearest_mate) * 180 if inputs.direction_of_nearest_mate else 0
         elif neuron.neuron_type == InputType.RANDOM_INPUT:
             return random.randint(0, 10)
         else:

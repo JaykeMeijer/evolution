@@ -85,7 +85,7 @@ dna_structure: Dict[str, DNAStructure] = {
     "size": DNAStructure(16, IntGene, {"min": 3, "max": 10}),
     "color": DNAStructure(24, Tuple3Gene, {}),
     "reproduction_cooldown": DNAStructure(32, IntGene, {"min": 50, "max": 150}),
-    "fertility": DNAStructure(40, IntGene, {"min": 0, "max": 20}),
+    "fertility": DNAStructure(40, IntGene, {"min": 0, "max": 10}),
     "neuron_connection_1": DNAStructure(48, NeuronConnectionGene, {"min": -1.0, "max": 1.0}),
     "neuron_connection_2": DNAStructure(56, NeuronConnectionGene, {"min": -1.0, "max": 1.0}),
     "neuron_connection_3": DNAStructure(64, NeuronConnectionGene, {"min": -1.0, "max": 1.0}),

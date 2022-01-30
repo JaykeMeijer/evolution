@@ -189,7 +189,8 @@ class Beast:
             self.position.move(self.rotation, self.speed)
             return self.energy_consumption / 5 * self.speed
         elif isinstance(action, Turn):
-            self.rotation = (self.rotation + action.degrees) % 360
+            turn_amount = max(action.degrees, 180 - self.size * 18)
+            self.rotation = (self.rotation + turn_amount) % 360
             return 0
         else:
             return 0

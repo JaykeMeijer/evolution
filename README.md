@@ -35,3 +35,15 @@ Simulation:
 ## Other
 
 - Use own rendering (like in brain) for fast quad tree render
+
+# Balancing mechanisms
+
+Implemented:
+
+- Larger beasts turn slower (defined in `Beast._apply_action`)
+- Larger beasts have higher energy consumption (defined in `Beast.__init__`)
+
+To be added:
+
+- Larger beasts have larger energy storage
+- Larger beasts win in a fight ?
