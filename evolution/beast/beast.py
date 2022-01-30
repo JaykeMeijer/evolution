@@ -53,6 +53,10 @@ class Beast:
         self.input_set: Optional[InputSet] = None
         self.nearest_mate: Optional[Beast] = None
 
+        font = pygame.font.SysFont("Calibri", 10)
+        self.name = font.render(str(self.id), True, (0, 0, 0))
+        self.name_offset = (self.name.get_width() / 2, self.name.get_height() / 2)
+
     def __str__(self):
         return f"Beast {self.id} (dead status {self.dead})"
 
@@ -155,9 +159,7 @@ class Beast:
             if render_nearest_mate:
                 self._draw_to_nearest_mate(screen)
 
-
     def _draw_beast(self, screen: pygame.surface.Surface):
-
         tail_end = translate(self.position.tuple(), self.rotation - 180, 3 * self.size)
         pygame.draw.line(screen, (0, 0, 0), self.position.tuple(), tail_end, 3)
         if self.selected:
@@ -165,6 +167,7 @@ class Beast:
         else:
             pygame.draw.circle(screen, (0, 0, 0), self.position.tuple(), self.size + 1)
         pygame.draw.circle(screen, self.color, self.position.tuple(), self.size)
+        screen.blit(self.name, (self.position.x - self.name_offset[0], self.position.y - self.name_offset[1]))
 
     def _draw_dead(self, screen: pygame.surface.Surface):
         c_val = int((255 / DESPAWN_TIME) * (self.dead - 1))
