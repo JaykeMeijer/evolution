@@ -3,8 +3,6 @@ from typing import Any, List, Optional, Tuple
 
 from pygame.rect import Rect
 
-MAX_POINTS = 4
-
 
 class QuadTreePoint:
     def __init__(self, x: int, y: int, obj: Any):
@@ -19,16 +17,14 @@ class QuadTreePoint:
         return f"({self.x}, {self.y}) - {self.obj}"
 
 
-class QuadTree:
-    subtrees: Optional[Tuple["QuadTree", "QuadTree", "QuadTree", "QuadTree"]] = None
-
+class Tree:
     def __init__(self, area: Rect, depth: int = 0, parent: "QuadTree" = None):
         self.area = area
         self.points: List[QuadTreePoint] = []
         self.depth = depth
         self.parent = parent
 
-    def _split(self) -> Tuple["QuadTree", "QuadTree", "QuadTree", "QuadTree"]:
+    def split(self) -> Tuple["QuadTree", "QuadTree", "QuadTree", "QuadTree"]:
         width = math.ceil(self.area.w / 2)
         height = math.ceil(self.area.h / 2)
         return (
@@ -52,7 +48,7 @@ class QuadTree:
             if self.subtrees is None:
                 if self.depth > 10:
                     raise RecursionError
-                self.subtrees = self._split()
+                self.subtrees = self.split()
                 for old_point in self.points:
                     self._insert_in_subtrees(old_point)
                 self.points = []

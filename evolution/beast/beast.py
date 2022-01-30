@@ -7,7 +7,7 @@ import pygame
 from evolution.beast.brain.brain import Brain
 from evolution.beast.dna.dna import DNA
 from evolution.beast.interact import Action, InputSet, MoveForward, Turn
-from evolution.datastructures.quadtree import QuadTree
+from evolution.datastructures.kdtree import KDTree
 from evolution.simulation.render_helpers import draw_dashed_line
 from evolution.util.math_helpers import get_direction
 from evolution.world.world import Position, translate
@@ -76,10 +76,11 @@ class Beast:
             f"rotation: {self.rotation}\n"
             f"speed: {self.speed}\n"
             f"-----------------------\n"
+            f"nearest_mate: {self.nearest_mate}\n"
             f"inputs: {self.input_set}\n"
         )
 
-    def step(self, tree: QuadTree):
+    def step(self, tree: KDTree):
         if self.dead > 0:
             self.dead += 1
         else:
@@ -114,14 +115,12 @@ class Beast:
 
         return []
 
-    def _get_inputs(self, tree: QuadTree) -> InputSet:
-        nearest_mate = self._find_nearest_mate(tree)
+    def _get_inputs(self, tree: KDTree) -> InputSet:
+        nearest_point, distance = tree.find_nearest_neighbour(self.position.tuple(), self)
+        nearest_mate = nearest_point.obj if nearest_point else None
         self.nearest_mate = nearest_mate
-
         input_set = InputSet(
-            distance_to_nearest_mate=(
-                math.dist(self.position.tuple(), nearest_mate.position.tuple()) if nearest_mate else None
-            ),
+            distance_to_nearest_mate=(distance if nearest_mate is not None else None),
             direction_of_nearest_mate=(
                 self._get_relative_direction(nearest_mate) if nearest_mate is not None else None
             ),
@@ -136,20 +135,6 @@ class Beast:
         elif relative_direction < -180:
             relative_direction += 360
         return relative_direction
-
-    def _find_nearest_mate(self, tree: QuadTree) -> Optional["Beast"]:
-        nearby_mates = tree.points_in_range(self.position.tuple(), 100)
-        if len(nearby_mates) <= 1:
-            return None
-        else:
-            nearby_mates_sorted = [
-                mate.obj
-                for mate, _ in sorted(
-                    [(mate, math.dist(self.position.tuple(), mate.coord())) for mate in nearby_mates],
-                    key=lambda x: x[1],
-                )
-            ]
-            return nearby_mates_sorted[1]
 
     def draw(self, screen: pygame.surface.Surface, render_nearest_mate: bool = False):
         if self.dead > 0:
