@@ -43,10 +43,9 @@ def _simulate_beasts(tree: KDTree):
 def _simulate_reproduction(tree: KDTree) -> List[Beast]:
     new_beasts: List[Beast] = []
 
-    # for beast in state.beasts:
-    #     nearby_beasts = tree.points_in_range(beast.position.tuple(), MAX_REPLICATION_DISTANCE)
-    #     for nearby in nearby_beasts:
-    #         if nearby.obj != beast:
-    #             new_beasts += beast.reproduce(nearby.obj)
+    for beast in state.beasts:
+        nearest_beast, distance = tree.find_nearest_neighbour(beast.position.tuple(), beast)
+        if nearest_beast is not None and distance < MAX_REPLICATION_DISTANCE:
+            new_beasts += beast.reproduce(nearest_beast.obj)
 
     return new_beasts

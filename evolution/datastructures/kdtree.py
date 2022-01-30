@@ -52,7 +52,6 @@ class KDTree:
             self.point = points[0]
             return
 
-        # Find median
         if self.vertical:
             key = lambda x: x.x
         else:
