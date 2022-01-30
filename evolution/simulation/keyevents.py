@@ -20,6 +20,11 @@ def _set_state_false(state: State, ui: UI, property: str):
         setattr(state, property, False)
 
 
+def _set_state_true(state: State, ui: UI, property: str):
+    if hasattr(state, property) and isinstance(getattr(state, property), bool):
+        setattr(state, property, True)
+
+
 def _call_UI_function(state: State, ui: UI, function: str):
     if hasattr(ui, function) and callable(getattr(ui, function)):
         func = getattr(ui, function)
@@ -28,5 +33,7 @@ def _call_UI_function(state: State, ui: UI, function: str):
 
 keymap = {
     27: (_call_UI_function, ["handle_escape"]),
+    32: (_toggle_state, ["simulation_paused"]),
     109: (_toggle_state, ["render_nearest_mate"]),
+    115: (_set_state_true, ["perform_step"]),
 }
