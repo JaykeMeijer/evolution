@@ -1,7 +1,6 @@
 from threading import Thread, current_thread
 from time import sleep, time
 
-import matplotlib as mpl
 import pygame
 
 from evolution.beast.beast import Beast
@@ -16,7 +15,6 @@ SIMULATION_STEP_TIME = 0.01
 
 pygame.init()
 pygame.font.init()
-mpl.use("Agg")
 
 ui = UI(state)
 render = Render(state, ui)

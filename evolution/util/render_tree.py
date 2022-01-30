@@ -2,12 +2,15 @@ import math
 import random
 from typing import Tuple, Union
 
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import networkx as nx
 import pygame
 
 from evolution.beast.beast import Beast
 from evolution.datastructures.quadtree import QuadTree, QuadTreePoint
+
+mpl.use("Agg")
 
 
 def render(tree: QuadTree):
