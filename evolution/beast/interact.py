@@ -17,11 +17,7 @@ class InputSet:
     def __str__(self):
         distance = f"{self.distance_to_nearest_mate:.2f}" if self.distance_to_nearest_mate is not None else "-"
         direction = f"{self.direction_of_nearest_mate:}" if self.direction_of_nearest_mate is not None else "-"
-        return (
-            "Inputs:\n"
-            f"  distance_nearest_mate: {distance}\n"
-            f"  direction_nearest_mate: {direction}"
-        )
+        return "Inputs:\n" f"  distance_nearest_mate: {distance}\n" f"  direction_nearest_mate: {direction}"
 
 
 class Noop(Action):

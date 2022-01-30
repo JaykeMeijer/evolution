@@ -72,8 +72,12 @@ class Connection:
 
     def __init__(self, gene: NeuronConnectionGene):
         gene_unpacked = gene.get_value()
-        self.neuron_1 = get_neuron_1(cast(int, gene_unpacked["neuron1_class"]), cast(int, gene_unpacked["neuron1_type"]))
-        self.neuron_2 = get_neuron_2(cast(int, gene_unpacked["neuron2_class"]), cast(int, gene_unpacked["neuron2_type"]))
+        self.neuron_1 = get_neuron_1(
+            cast(int, gene_unpacked["neuron1_class"]), cast(int, gene_unpacked["neuron1_type"])
+        )
+        self.neuron_2 = get_neuron_2(
+            cast(int, gene_unpacked["neuron2_class"]), cast(int, gene_unpacked["neuron2_type"])
+        )
         self.strength = gene_unpacked["strength"]
 
         self.neuron_1.outgoing_connections.append(self)
@@ -84,14 +88,14 @@ class Connection:
 
 
 def get_neuron_1(class_num: int, type_num: int) -> Neuron:
-    if True:#class_num == 0:
+    if True:  # class_num == 0:
         return InputNeuron(InputType(type_num % len(InputType)))
     else:
         return InternalNeuron()
 
 
 def get_neuron_2(class_num: int, type_num: int) -> Neuron:
-    if True:#class_num == 0:
+    if True:  # class_num == 0:
         return OutputNeuron(OutputType(type_num % len(OutputType)))
     else:
         return InternalNeuron()

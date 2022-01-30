@@ -1,12 +1,13 @@
-import pygame
 from time import time
+
+import pygame
 
 from evolution.simulation.ui.ui import UI
 from evolution.world.state import State
 from evolution.world.world import XSIZE, YSIZE
 
+FRAME_LIMIT = 1 / 1000
 
-FRAME_LIMIT = 1/1000
 
 class Render:
     last_frame: float = 0

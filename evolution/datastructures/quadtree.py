@@ -97,7 +97,7 @@ class QuadTree:
         out_lines.append(f"{tab_str}+ Subtree point - {self._printable_rect(self.area)}")
         for p in self.points:
             out_lines.append(f"{tab_str}  - {p}")
-        
+
         if self.subtrees is not None:
             for s in self.subtrees:
                 out_lines.append(s.print(tab + 1))

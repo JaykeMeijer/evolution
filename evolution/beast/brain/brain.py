@@ -5,7 +5,15 @@ from typing import Any, Dict, Iterable, List, Tuple, cast
 import networkx as nx
 import pygame
 
-from evolution.beast.brain.neuron import Connection, InputNeuron, InputType, InternalNeuron, Neuron, OutputNeuron, OutputType
+from evolution.beast.brain.neuron import (
+    Connection,
+    InputNeuron,
+    InputType,
+    InternalNeuron,
+    Neuron,
+    OutputNeuron,
+    OutputType,
+)
 from evolution.beast.dna.dna import DNA
 from evolution.beast.dna.gene import NeuronConnectionGene
 from evolution.beast.interact import Action, InputSet, MoveForward, Noop, Turn
@@ -42,10 +50,12 @@ class Brain:
 
         actions: List[Action] = []
         for neuron in self.output_neurons.values():
-            value = sum([
-                self._get_incoming_connection_value(connection.neuron_1, inputs) * connection.strength
-                for connection in neuron.incoming_connections
-            ])
+            value = sum(
+                [
+                    self._get_incoming_connection_value(connection.neuron_1, inputs) * connection.strength
+                    for connection in neuron.incoming_connections
+                ]
+            )
             actions.append(self._get_action_for_output_neuron(neuron, value))
 
         return actions
@@ -54,10 +64,12 @@ class Brain:
         if isinstance(neuron, InputNeuron):
             return self._get_value_from_input_neuron(neuron, inputs)
         else:
-            return sum([
-                self._get_incoming_connection_value(connection.neuron_1, inputs) * connection.strength
-                for connection in neuron.outgoing_connections
-            ])
+            return sum(
+                [
+                    self._get_incoming_connection_value(connection.neuron_1, inputs) * connection.strength
+                    for connection in neuron.outgoing_connections
+                ]
+            )
 
     def _get_value_from_input_neuron(self, neuron: InputNeuron, inputs: InputSet) -> float:
         if neuron.neuron_type == InputType.MATE_DISTANCE:
@@ -88,11 +100,7 @@ class Brain:
 
 class BrainRenderer:
     NODE_SIZE = 10
-    NEURON_COLORS = {
-        InputNeuron: "red",
-        InternalNeuron: "blue",
-        OutputNeuron: "green"
-    }
+    NEURON_COLORS = {InputNeuron: "red", InternalNeuron: "blue", OutputNeuron: "green"}
     IMGSIZE = 300
     MARGIN = 50
     FIGSIZE = (3, 3)
@@ -107,7 +115,9 @@ class BrainRenderer:
         colors = {node: self.NEURON_COLORS[type(node)] for node in graph.nodes()}
         labels = {node: node.neuron_type.name for node in graph.nodes()}
         edge_labels = {(n1, n2): f"{graph[n1][n2]['strength']:.2f}" for n1, n2 in graph.edges()}
-        pos = nx.planar_layout(graph, scale=(self.IMGSIZE / 2) - self.MARGIN, center=(self.IMGSIZE/2, self.IMGSIZE/2))
+        pos = nx.planar_layout(
+            graph, scale=(self.IMGSIZE / 2) - self.MARGIN, center=(self.IMGSIZE / 2, self.IMGSIZE / 2)
+        )
 
         surface = pygame.Surface((self.IMGSIZE, self.IMGSIZE))
         surface.fill("white")
@@ -122,7 +132,7 @@ class BrainRenderer:
         surface: pygame.surface.Surface,
         nodes: Iterable[Neuron],
         pos: Dict[Neuron, Tuple[int, int]],
-        colors: Dict[Any, str]
+        colors: Dict[Any, str],
     ):
         for node in nodes:
             pygame.draw.circle(
@@ -137,7 +147,7 @@ class BrainRenderer:
         surface: pygame.surface.Surface,
         nodes: Iterable[Any],
         pos: Dict[Any, Tuple[int, int]],
-        labels: Dict[Any, str]
+        labels: Dict[Any, str],
     ):
         for node in nodes:
             position = pos[node]
@@ -145,10 +155,7 @@ class BrainRenderer:
             surface.blit(label, (position[0] - label.get_width() / 2, position[1] + self.font.get_linesize()))
 
     def _draw_edges(
-        self,
-        surface: pygame.surface.Surface,
-        edges: Iterable[Tuple[Any, Any]],
-        pos: Dict[Any, Tuple[int, int]]
+        self, surface: pygame.surface.Surface, edges: Iterable[Tuple[Any, Any]], pos: Dict[Any, Tuple[int, int]]
     ):
         for node1, node2 in edges:
             direction = get_direction(pos[node1], pos[node2])
@@ -162,7 +169,7 @@ class BrainRenderer:
                     (end),
                     (translate(end, direction + 135, 5)),
                     (translate(end, direction - 135, 5)),
-                )
+                ),
             )
 
     def _draw_edge_labels(

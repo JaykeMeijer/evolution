@@ -1,6 +1,6 @@
 import math
 import random
-from typing import List, Tuple, Optional, Union
+from typing import List, Optional, Tuple, Union
 
 import pygame
 
@@ -10,7 +10,6 @@ from evolution.beast.interact import Action, InputSet, MoveForward, Turn
 from evolution.datastructures.quadtree import QuadTree
 from evolution.util.math_helpers import get_direction
 from evolution.world.world import Position, translate
-
 
 DESPAWN_TIME = 50
 beast_counter = 0
@@ -112,24 +111,20 @@ class Beast:
 
         input_set = InputSet(
             distance_to_nearest_mate=(
-                math.dist(self.position.tuple(), nearest_mate.position.tuple())
-                if nearest_mate else None
+                math.dist(self.position.tuple(), nearest_mate.position.tuple()) if nearest_mate else None
             ),
             direction_of_nearest_mate=(
-                self._get_relative_direction(nearest_mate)
-                if nearest_mate is not None else None
+                self._get_relative_direction(nearest_mate) if nearest_mate is not None else None
             ),
         )
         self.input_set = input_set
         return input_set
 
     def _get_relative_direction(self, mate: "Beast") -> int:
-        relative_direction = (
-            get_direction(self.position.tuple(), mate.position.tuple()) - self.rotation
-        )
+        relative_direction = get_direction(self.position.tuple(), mate.position.tuple()) - self.rotation
         if relative_direction > 180:
             relative_direction -= 360
-        elif relative_direction < - 180:
+        elif relative_direction < -180:
             relative_direction += 360
         return relative_direction
 
@@ -141,10 +136,8 @@ class Beast:
             nearby_mates_sorted = [
                 mate.obj
                 for mate, _ in sorted(
-                    [
-                        (mate, math.dist(self.position.tuple(), mate.coord()))
-                        for mate in nearby_mates
-                    ], key=lambda x: x[1]
+                    [(mate, math.dist(self.position.tuple(), mate.coord())) for mate in nearby_mates],
+                    key=lambda x: x[1],
                 )
             ]
             return nearby_mates_sorted[1]

@@ -20,6 +20,7 @@ class Element:
             self.rect[3] + 2,
         )
 
+
 class Button(Element):
     def __init__(self, location: Tuple[int, int], size: Tuple[int, int], name: str, action: Callable):
         super().__init__(location, size, name)
@@ -69,14 +70,7 @@ class ToggleButton(Button):
 
 
 class PushButton(Button):
-    def __init__(
-        self,
-        location: Tuple[int, int],
-        size: Tuple[int, int],
-        name: str,
-        action: Callable,
-        image: str
-    ):
+    def __init__(self, location: Tuple[int, int], size: Tuple[int, int], name: str, action: Callable, image: str):
         self.image = pygame.image.load(image)
         super().__init__(location, size, name, action)
 

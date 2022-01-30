@@ -1,6 +1,6 @@
-from dataclasses import dataclass
 import math
 import random
+from dataclasses import dataclass
 from typing import Tuple
 
 from evolution.simulation.ui_constants import XSIZE, YSIZE
