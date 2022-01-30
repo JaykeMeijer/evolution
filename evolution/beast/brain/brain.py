@@ -45,9 +45,6 @@ class Brain:
         return self.output_neurons[neuron.neuron_type]
 
     def step(self, inputs: InputSet) -> List[Action]:
-        if inputs.all_none():
-            return []
-
         actions: List[Action] = []
         for neuron in self.output_neurons.values():
             value = sum(

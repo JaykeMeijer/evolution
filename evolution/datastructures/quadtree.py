@@ -69,7 +69,7 @@ class QuadTree:
 
     def points_in_range(self, location: Tuple[int, int], range: int) -> List[QuadTreePoint]:
         found_points: List[QuadTreePoint] = []
-        boundary = Rect(location[0], location[1], 2 * range, 2 * range)
+        boundary = Rect(location[0] - range, location[1] - range, 2 * range, 2 * range)
 
         if not self.area.colliderect(boundary):
             return []
