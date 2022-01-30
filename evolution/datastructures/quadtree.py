@@ -1,9 +1,7 @@
 import math
-
-from typing import Any, List, Optional, Tuple, Union
+from typing import Any, List, Optional, Tuple
 
 from pygame.rect import Rect
-
 
 MAX_POINTS = 4
 

@@ -1,5 +1,5 @@
-from time import time, sleep
 from threading import Thread, current_thread
+from time import sleep, time
 
 import matplotlib as mpl
 import pygame
@@ -7,23 +7,23 @@ import pygame
 from evolution.beast.beast import Beast
 from evolution.beast.simulate import simulate_beasts
 from evolution.simulation.events import EventLoop
-from evolution.world.state import state
-from evolution.simulation.events import EventLoop
 from evolution.simulation.render import Render
 from evolution.simulation.ui.ui import UI
+from evolution.world.state import state
 
 NUM_BEASTS = 50
 SIMULATION_STEP_TIME = 0.01
 
 pygame.init()
 pygame.font.init()
-mpl.use('Agg')
+mpl.use("Agg")
 
 ui = UI(state)
 render = Render(state, ui)
 eventLoop = EventLoop(state, ui)
 
 time_for_step: float = 0.1
+
 
 def setup_world():
     print("Setting up world")

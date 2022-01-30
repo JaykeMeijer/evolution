@@ -7,12 +7,11 @@ import pygame
 from evolution.beast.beast import Beast
 from evolution.beast.brain.brain import BrainRenderer
 from evolution.simulation.render_helpers import draw_multiline_text
-from evolution.simulation.ui_constants import XSIZE, YSIZE
-from evolution.simulation.ui.interactions import toggle_pause, step
-from evolution.simulation.ui.ui_elements import BeastPopup, Button, Element, Popup, PushButton, ToggleButton
-from evolution.simulation.ui.ui_elements import TreePopup
+from evolution.simulation.ui.interactions import step, toggle_pause
+from evolution.simulation.ui.ui_elements import BeastPopup, Button, Element, Popup, PushButton, ToggleButton, TreePopup
+from evolution.simulation.ui_constants import YSIZE
 from evolution.util.render_tree import render
-from evolution.world.state import State, state
+from evolution.world.state import State
 
 IMAGE_BASE_PATH = "assets/images/ui"
 
@@ -76,7 +75,7 @@ class UI:
             self.screen,
             f"{round(1 / time_for_frame)} FPS\n{round(1 / time_for_step)} SPS",
             (YSIZE - 100, 10),
-            self.font
+            self.font,
         )
 
     def _draw_buttons(self):
