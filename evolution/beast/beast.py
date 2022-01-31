@@ -1,4 +1,5 @@
 import random
+from dataclasses import dataclass
 from typing import List, Optional, Tuple
 
 import pygame
@@ -13,6 +14,7 @@ from evolution.world.world import Position, translate
 
 DESPAWN_TIME = 50
 FIGHTING_COOLDOWN = 100
+NOT_MOVED_LIMIT = 100
 beast_counter = 0
 
 
@@ -23,6 +25,7 @@ class Beast:
     reproduction_cooldown: int = 0
     fight_cooldown: int = 0
     dead: int = 0
+    not_moved: int = 0
 
     position: Position
 
@@ -59,6 +62,7 @@ class Beast:
         font = pygame.font.SysFont("Calibri", 10)
         self.name = font.render(str(self.id), True, (0, 0, 0))
         self.name_offset = (self.name.get_width() / 2, self.name.get_height() / 2)
+        self.stats = BeastStats()
 
     def _reset_energy(self):
         self.energy = self.dna.get_gene("base_energy").get_value()
@@ -84,6 +88,8 @@ class Beast:
             f"-----------------------\n"
             f"nearest_mate: {self.nearest_mate}\n"
             f"inputs: {self.input_set}\n"
+            f"-----------------------\n"
+            f"stats: {self.stats}"
         )
 
     def step(self, tree: KDTree):
@@ -92,8 +98,15 @@ class Beast:
         else:
             self.energy -= self.energy_consumption / 10
             actions = self.brain.step(self._get_inputs(tree))
+            prev_pos = self.position.tuple()
             for action in actions:
                 self.energy -= self._apply_action(action)
+
+            # TODO temp until better solution found
+            if self.position.tuple() == prev_pos:
+                self.not_moved += 1
+                if self.not_moved > NOT_MOVED_LIMIT:
+                    self.dead = 1
 
             self.reproduction_cooldown = max(self.reproduction_cooldown - 1, 0)
             self.fight_cooldown = max(self.fight_cooldown - 1, 0)
@@ -115,6 +128,7 @@ class Beast:
             new_beast.reset_reproduction_cooldown()
             self.reset_reproduction_cooldown()
             other.reset_reproduction_cooldown()
+            self.stats.children += 1
             return [new_beast]
 
         return []
@@ -139,6 +153,7 @@ class Beast:
 
     def _fight_result(self, other: "Beast") -> Tuple[Optional["Beast"], Optional["Beast"]]:
         if self._can_fight() and other._can_fight():
+            self.stats.fights += 1
 
             self.fight_cooldown = FIGHTING_COOLDOWN
             other.fight_cooldown = FIGHTING_COOLDOWN
@@ -148,6 +163,7 @@ class Beast:
             if fight_conclusion_chance < abs(upperhand_factor):
                 fight_win_chance = rand_int_lower_range(0, self.MAX_UPPERHAND_FACTOR, 2) * random.choice([-1, 1])
                 if fight_win_chance < upperhand_factor:
+                    self.stats.fights_won += 1
                     return self, other
                 else:
                     return other, self
@@ -229,3 +245,13 @@ class Beast:
             return 0
         else:
             return 0
+
+
+@dataclass
+class BeastStats:
+    fights: int = 0
+    fights_won: int = 0
+    children: int = 0
+
+    def __str__(self):
+        return f"Fights: {self.fights} (won {self.fights_won})\n" f"Children: {self.children}"
