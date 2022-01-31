@@ -1,4 +1,5 @@
 import math
+import random
 from typing import Tuple
 
 
@@ -26,3 +27,10 @@ def translate(start: Tuple[int, int], direction: int, distance: int) -> Tuple[in
 def translate_non_rounded(start: Tuple[float, float], direction: int, distance: int) -> Tuple[float, float]:
     radians = math.radians(direction)
     return (start[0] + math.sin(radians) * distance, start[1] - math.cos(radians) * distance)
+
+
+def rand_int_lower_range(a: int, b: int, strength: int):
+    result = math.inf
+    for _ in range(strength):
+        result = min(result, random.randint(a, b))
+    return result
