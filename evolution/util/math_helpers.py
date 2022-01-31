@@ -21,3 +21,8 @@ def translate(start: Tuple[int, int], direction: int, distance: int) -> Tuple[in
     """
     radians = math.radians(direction)
     return (round(start[0] + math.sin(radians) * distance), round(start[1] - math.cos(radians) * distance))
+
+
+def translate_non_rounded(start: Tuple[float, float], direction: int, distance: int) -> Tuple[float, float]:
+    radians = math.radians(direction)
+    return (start[0] + math.sin(radians) * distance, start[1] - math.cos(radians) * distance)

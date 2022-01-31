@@ -1,6 +1,6 @@
 import math
 import random
-from typing import Tuple, Union
+from typing import Tuple
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -27,6 +27,12 @@ def render_tree(tree: KDTree):
         node_size=50,
         width=1,
     )
+    nx.draw_networkx_labels(
+        G,
+        pos,
+        labels={node: node.point.obj.id for node in G.nodes()},
+        font_size=6,
+    )
     nx.draw_networkx_edge_labels(
         G,
         pos,
@@ -40,6 +46,7 @@ def render_tree(tree: KDTree):
 
 
 def _add_to_graph(tree: KDTree, G: nx.DiGraph):
+    G.add_node(tree)
     if tree.left is not None:
         G.add_edge(tree, tree.left, section="L")
         _add_to_graph(tree.left, G)

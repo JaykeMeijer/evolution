@@ -1,5 +1,3 @@
-from typing import Callable
-
 from evolution.simulation.ui.ui import UI
 from evolution.world.state import State
 
@@ -35,5 +33,7 @@ keymap = {
     27: (_call_UI_function, ["handle_escape"]),
     32: (_toggle_state, ["simulation_paused"]),
     109: (_toggle_state, ["render_nearest_mate"]),
+    110: (_toggle_state, ["render_beast_name"]),
     115: (_set_state_true, ["perform_step"]),
+    116: (_toggle_state, ["render_kdtree"]),
 }
