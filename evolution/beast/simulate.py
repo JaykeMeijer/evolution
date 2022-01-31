@@ -11,6 +11,10 @@ MAX_REPLICATION_DISTANCE = 15
 
 
 def simulate_beasts():
+    if len([beast for beast in state.beasts if beast.dead == 0]) == 0:
+        state.active = False
+        return
+
     tree = _get_kd_tree()
     state.tree = tree
     _simulate_beasts(tree)
