@@ -41,8 +41,8 @@ Implemented:
 
 - Larger beasts turn slower (defined in `Beast._apply_action`)
 - Larger beasts have higher energy consumption (defined in `Beast.__init__`)
+- Larger beasts have a bigger chance to win a fight (defined in `Beast._fight_result`)
 
 To be added:
 
 - Larger beasts have larger energy storage
-- Larger beasts win in a fight ?
