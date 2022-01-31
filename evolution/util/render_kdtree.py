@@ -1,6 +1,6 @@
 import math
 import random
-from typing import Tuple, Union
+from typing import Tuple
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -8,12 +8,12 @@ import networkx as nx
 import pygame
 
 from evolution.beast.beast import Beast
-from evolution.datastructures.quadtree import QuadTree, QuadTreePoint
+from evolution.datastructures.kdtree import KDTree
 
 mpl.use("Agg")
 
 
-def render(tree: QuadTree):
+def render_tree(tree: KDTree):
     G = nx.DiGraph()
     _add_to_graph(tree, G)
     pos = hierarchy_pos(G, width=2 * math.pi, xcenter=0)
@@ -27,6 +27,12 @@ def render(tree: QuadTree):
         node_size=50,
         width=1,
     )
+    nx.draw_networkx_labels(
+        G,
+        pos,
+        labels={node: node.point.obj.id for node in G.nodes()},
+        font_size=6,
+    )
     nx.draw_networkx_edge_labels(
         G,
         pos,
@@ -39,24 +45,20 @@ def render(tree: QuadTree):
     return surface
 
 
-def _add_to_graph(tree: QuadTree, G: nx.DiGraph):
-    if tree.subtrees is not None:
-        for i, s in enumerate(tree.subtrees):
-            G.add_edge(tree, s, section=i)
-            _add_to_graph(s, G)
+def _add_to_graph(tree: KDTree, G: nx.DiGraph):
+    G.add_node(tree)
+    if tree.left is not None:
+        G.add_edge(tree, tree.left, section="L")
+        _add_to_graph(tree.left, G)
+    if tree.right is not None:
+        G.add_edge(tree, tree.right, section="R")
+        _add_to_graph(tree.right, G)
 
-    for p in tree.points:
-        G.add_edge(tree, p, section="")
 
-
-def _get_node_color(node: Union[QuadTree, QuadTreePoint]) -> Tuple[float, float, float]:
-    if type(node) == QuadTree:
-        return (0, 0, 0)
-    else:
-        assert isinstance(node, QuadTreePoint)
-        assert isinstance(node.obj, Beast)
-        c = node.obj.color
-        return (c[0] / 255.0, c[1] / 255.0, c[2] / 255.0)
+def _get_node_color(node: KDTree) -> Tuple[float, float, float]:
+    assert isinstance(node.point.obj, Beast)
+    c = node.point.obj.color
+    return (c[0] / 255.0, c[1] / 255.0, c[2] / 255.0)
 
 
 def hierarchy_pos(G, root=None, width=1.0, vert_gap=0.2, vert_loc=0, xcenter=0.5):

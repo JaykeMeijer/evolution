@@ -1,13 +1,12 @@
-import math
 import random
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Tuple
 
 import pygame
 
 from evolution.beast.brain.brain import Brain
 from evolution.beast.dna.dna import DNA
 from evolution.beast.interact import Action, InputSet, MoveForward, Turn
-from evolution.datastructures.quadtree import QuadTree
+from evolution.datastructures.kdtree import KDTree
 from evolution.simulation.render_helpers import draw_dashed_line
 from evolution.util.math_helpers import get_direction
 from evolution.world.world import Position, translate
@@ -48,6 +47,8 @@ class Beast:
         self.mate_detection_range: int = 100  # TODO: Make genetic
         self.speed: int = 5  # TODO: Make genetic
 
+        self.max_turning_rate: int = 90 - self.size * 9
+
         self.selected: bool = False
 
         self.input_set: Optional[InputSet] = None
@@ -76,10 +77,11 @@ class Beast:
             f"rotation: {self.rotation}\n"
             f"speed: {self.speed}\n"
             f"-----------------------\n"
+            f"nearest_mate: {self.nearest_mate}\n"
             f"inputs: {self.input_set}\n"
         )
 
-    def step(self, tree: QuadTree):
+    def step(self, tree: KDTree):
         if self.dead > 0:
             self.dead += 1
         else:
@@ -114,14 +116,12 @@ class Beast:
 
         return []
 
-    def _get_inputs(self, tree: QuadTree) -> InputSet:
-        nearest_mate = self._find_nearest_mate(tree)
+    def _get_inputs(self, tree: KDTree) -> InputSet:
+        nearest_point, distance = tree.find_nearest_neighbour(self.position.tuple(), self)
+        nearest_mate = nearest_point.obj if nearest_point else None
         self.nearest_mate = nearest_mate
-
         input_set = InputSet(
-            distance_to_nearest_mate=(
-                math.dist(self.position.tuple(), nearest_mate.position.tuple()) if nearest_mate else None
-            ),
+            distance_to_nearest_mate=(distance if nearest_mate is not None else None),
             direction_of_nearest_mate=(
                 self._get_relative_direction(nearest_mate) if nearest_mate is not None else None
             ),
@@ -137,27 +137,15 @@ class Beast:
             relative_direction += 360
         return relative_direction
 
-    def _find_nearest_mate(self, tree: QuadTree) -> Optional["Beast"]:
-        nearby_mates = tree.points_in_range(self.position.tuple(), 100)
-        if len(nearby_mates) <= 1:
-            return None
-        else:
-            nearby_mates_sorted = [
-                mate.obj
-                for mate, _ in sorted(
-                    [(mate, math.dist(self.position.tuple(), mate.coord())) for mate in nearby_mates],
-                    key=lambda x: x[1],
-                )
-            ]
-            return nearby_mates_sorted[1]
-
-    def draw(self, screen: pygame.surface.Surface, render_nearest_mate: bool = False):
+    def draw(self, screen: pygame.surface.Surface, render_nearest_mate: bool = False, render_name: bool = True):
         if self.dead > 0:
             self._draw_dead(screen)
         else:
             self._draw_beast(screen)
             if render_nearest_mate:
                 self._draw_to_nearest_mate(screen)
+            if render_name:
+                self._draw_name(screen)
 
     def _draw_beast(self, screen: pygame.surface.Surface):
         tail_end = translate(self.position.tuple(), self.rotation - 180, 3 * self.size)
@@ -167,6 +155,8 @@ class Beast:
         else:
             pygame.draw.circle(screen, (0, 0, 0), self.position.tuple(), self.size + 1)
         pygame.draw.circle(screen, self.color, self.position.tuple(), self.size)
+
+    def _draw_name(self, screen: pygame.surface.Surface):
         screen.blit(self.name, (self.position.x - self.name_offset[0], self.position.y - self.name_offset[1]))
 
     def _draw_dead(self, screen: pygame.surface.Surface):
@@ -189,7 +179,7 @@ class Beast:
             self.position.move(self.rotation, self.speed)
             return self.energy_consumption / 5 * self.speed
         elif isinstance(action, Turn):
-            turn_amount = max(action.degrees, 180 - self.size * 18)
+            turn_amount = max(-self.max_turning_rate, min(self.max_turning_rate, action.degrees))
             self.rotation = (self.rotation + turn_amount) % 360
             return 0
         else:

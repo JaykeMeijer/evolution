@@ -25,6 +25,7 @@ class Render:
         if time() - self.last_frame > FRAME_LIMIT:
             self._draw_world()
             self._draw_beasts()
+            self._draw_kdtree()
             self.ui.draw(time() - self.last_frame, time_for_step)
 
             pygame.display.flip()
@@ -35,4 +36,8 @@ class Render:
 
     def _draw_beasts(self):
         for beast in self.state.beasts:
-            beast.draw(self.screen, self.state.render_nearest_mate)
+            beast.draw(self.screen, self.state.render_nearest_mate, self.state.render_beast_name)
+
+    def _draw_kdtree(self):
+        if self.state.render_kdtree and self.state.tree is not None:
+            self.state.tree.draw(self.screen)

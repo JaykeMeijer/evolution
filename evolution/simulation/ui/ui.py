@@ -10,7 +10,7 @@ from evolution.simulation.render_helpers import draw_multiline_text
 from evolution.simulation.ui.interactions import step, toggle_pause
 from evolution.simulation.ui.ui_elements import BeastPopup, Button, Element, Popup, PushButton, ToggleButton, TreePopup
 from evolution.simulation.ui_constants import YSIZE
-from evolution.util.render_tree import render
+from evolution.util.render_kdtree import render_tree
 from evolution.world.state import State
 
 IMAGE_BASE_PATH = "assets/images/ui"
@@ -136,7 +136,7 @@ class UI:
 
     def _tree_thread(self):
         tree_popup = cast(TreePopup, self.static_elements["tree"])
-        tree_popup.set_image(render(self.state.tree))
+        tree_popup.set_image(render_tree(self.state.tree))
         tree_popup.shown = True
 
     def _show_tree(self):
