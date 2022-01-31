@@ -64,7 +64,7 @@ def run_simulation():
     print("Running simulation")
     simulation_thread = Thread(target=_game_loop, name="simulation")
     render_thread = Thread(target=_render_loop, name="render")
-    current_thread().setName("event")
+    current_thread().name = "event"
     simulation_thread.start()
     render_thread.start()
 
