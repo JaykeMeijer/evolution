@@ -34,7 +34,7 @@ Simulation:
 
 ## Other
 
-- Use own rendering (like in brain) for fast quad tree render
+- Use own rendering (like in brain) for fast tree render
 
 # Balancing mechanisms
 
