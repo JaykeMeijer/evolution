@@ -8,6 +8,7 @@ from evolution.beast.simulate import simulate_beasts
 from evolution.simulation.events import EventLoop
 from evolution.simulation.render import Render
 from evolution.simulation.ui.ui import UI
+from evolution.util.profiling import profileit
 from evolution.world.state import state
 
 NUM_BEASTS = 50
@@ -28,6 +29,7 @@ def setup_world():
     state.beasts += [Beast() for _ in range(NUM_BEASTS)]
 
 
+@profileit("profile_for_game_loop")
 def _game_loop():
     global time_for_step
     last_simulation_iteration = 0
@@ -48,6 +50,7 @@ def _game_loop():
             sleep(0.1)
 
 
+@profileit("profile_for_render_loop")
 def _render_loop():
     print("Starting render loop")
     while state.active:
