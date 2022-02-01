@@ -10,7 +10,7 @@ class Gene:
     value: int
 
     def __init__(self, location: int, dna: str):
-        self.value = int(dna[location : location + 8], base=16)
+        self.value = int(dna[location : location + GENE_SIZE], base=16)
 
     def get_value(self):
         raise NotImplementedError
@@ -58,17 +58,25 @@ class Tuple3Gene(Gene):
 @dataclass
 class NeuronConnectionGene(Gene):
     def __init__(self, location: int, dna: str, min: float, max: float):
-        self.value = int(dna[location : location + 8], base=16)
         self.min = min
         self.max = max
+        super().__init__(location, dna)
 
     def get_value(self) -> Dict[str, int | float]:
+        """
+        Gene layout is as follows (8 hex chars -> 32 bits):
+        bit 1             (1 bit): neuron 1 class (input or internal)
+        bit 2  -  bit 6  (5 bits): neuron 1 type
+        bit 7             (1 bit): neuron 2 class (internal or output)
+        bit 8  - bit 12  (5 bits): neuron 2 type
+        bit 13 - bit 32 (20 bits): strength of connection (scaled to range(min, max))
+        """
         return {
             "neuron1_class": int(self.value >> 31),
             "neuron1_type": int(self.value >> 26 & 31),
             "neuron2_class": int(self.value >> 25 & 1),
             "neuron2_type": int(self.value >> 20 & 31),
-            "strength": (float(self.value & 0x1FFFFF) / 0x1FFFFF * (self.max - self.min)) + self.min,
+            "strength": (float(self.value & 0xFFFFF) / 0xFFFFF * (self.max - self.min)) + self.min,
         }
 
 
