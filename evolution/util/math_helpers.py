@@ -29,6 +29,10 @@ def translate_non_rounded(start: Tuple[float, float], direction: int, distance: 
     return (start[0] + math.sin(radians) * distance, start[1] - math.cos(radians) * distance)
 
 
+def square_dist(point_a: Tuple[int, int], point_b: Tuple[int, int]):
+    return (point_a[0] - point_b[0]) ** 2 + (point_a[1] - point_b[1]) ** 2
+
+
 def rand_int_lower_range(a: int, b: int, strength: int):
     result = math.inf
     for _ in range(strength):
