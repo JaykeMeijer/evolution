@@ -13,9 +13,9 @@ class State:
     beasts: List["Beast"] = field(default_factory=list)
     tree: Optional[KDTree] = None
 
-    render_nearest_mate: bool = True
+    render_nearest_mate: bool = False
     render_kdtree: bool = False
-    render_beast_name: bool = True
+    render_beast_name: bool = False
 
 
 state = State()

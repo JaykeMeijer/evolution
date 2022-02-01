@@ -16,6 +16,10 @@ Evolution:
 - Add fighting / eating eachother: bigger is better, fighting gene
 - Add speed as genetic parameter
 
+Simulation:
+- Add controlable speed
+- Toggle button not changing with keypress
+
 ## Would be cool
 
 Evolution:
@@ -41,8 +45,8 @@ Implemented:
 
 - Larger beasts turn slower (defined in `Beast._apply_action`)
 - Larger beasts have higher energy consumption (defined in `Beast.__init__`)
+- Larger beasts have a bigger chance to win a fight (defined in `Beast._fight_result`)
 
 To be added:
 
 - Larger beasts have larger energy storage
-- Larger beasts win in a fight ?
