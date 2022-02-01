@@ -22,7 +22,7 @@ class DNA:
     def mutate(self):
         new_str = ""
         for char in self.dna:
-            if random.randint(0, 100000) == 0:
+            if random.randint(0, 1000) == 0:
                 new_str += f"{random.randint(0, 16):x}"
             else:
                 new_str += char

@@ -16,6 +16,10 @@ Evolution:
 - Add fighting / eating eachother: bigger is better, fighting gene
 - Add speed as genetic parameter
 
+Simulation:
+- Add controlable speed
+- Toggle button not changing with keypress
+
 ## Would be cool
 
 Evolution:
