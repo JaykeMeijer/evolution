@@ -1,3 +1,4 @@
+import math
 from typing import List
 
 from pygame.rect import Rect
@@ -47,12 +48,14 @@ def _simulate_beasts(tree: KDTree):
 def _simulate_reproduction(tree: KDTree) -> List[Beast]:
     new_beasts: List[Beast] = []
     for beast in state.beasts:
-        nearest_beast, distance = tree.find_nearest_neighbour(beast.position.tuple(), beast)
-        if nearest_beast is not None and distance < MAX_REPLICATION_DISTANCE:
-            new_beasts += beast.reproduce(nearest_beast.obj)
+        nearest_beast = beast.nearest_mate
+        if nearest_beast is not None:
+            distance = math.dist(beast.position.tuple(), nearest_beast.position.tuple())
+            if distance < MAX_REPLICATION_DISTANCE:
+                new_beasts += beast.reproduce(nearest_beast)
 
-            if len(new_beasts) == 0:
-                # No reproduction, fight instead TODO improve
-                beast.fight(nearest_beast.obj)
+                if len(new_beasts) == 0:
+                    # No reproduction, fight instead TODO improve
+                    beast.fight(nearest_beast)
 
     return new_beasts
