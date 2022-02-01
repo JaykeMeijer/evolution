@@ -25,6 +25,7 @@ class Beast:
     reproduction_cooldown: int = 0
     fight_cooldown: int = 0
     dead: int = 0
+    killed: bool = False
     not_moved: int = 0
 
     position: Position
@@ -148,6 +149,7 @@ class Beast:
         if winner is not None and loser is not None:
             winner._reset_energy()
             loser.dead = 1
+            loser.killed = True
 
     MAX_UPPERHAND_FACTOR = 13
 
@@ -222,7 +224,7 @@ class Beast:
 
     def _draw_dead(self, screen: pygame.surface.Surface):
         c_val = int((255 / DESPAWN_TIME) * (self.dead - 1))
-        color = (c_val, c_val, c_val)
+        color = (255, c_val, c_val) if self.killed else (c_val, c_val, c_val)
         pygame.draw.line(screen, color, self.position.tuple(), translate(self.position.tuple(), 180, 10), 3)
         pygame.draw.line(
             screen, color, (self.position.x - 3, self.position.y + 3), (self.position.x + 3, self.position.y + 3), 3
