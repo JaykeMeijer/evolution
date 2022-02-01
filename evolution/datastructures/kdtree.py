@@ -4,6 +4,8 @@ from typing import Any, List, Optional, Tuple
 import pygame
 from pygame.rect import Rect
 
+from evolution.util.math_helpers import square_dist
+
 MAX_POINTS = 4
 
 
@@ -12,9 +14,6 @@ class KDTreePoint:
         self.x = x
         self.y = y
         self.obj = obj
-
-    def coord(self) -> Tuple[int, int]:
-        return (self.x, self.y)
 
     def __str__(self):
         return f"({self.x}, {self.y}) - {self.obj}"
@@ -88,9 +87,19 @@ class KDTree:
         current_best: float = math.inf,
         best_node: Optional[KDTreePoint] = None,
     ) -> Tuple[Optional[KDTreePoint], float]:
+        node, squared_distance = self._find_nearest_neighbour(location, obj, current_best, best_node)
+        return node, math.sqrt(squared_distance)
+
+    def _find_nearest_neighbour(
+        self,
+        location: Tuple[int, int],
+        obj: Any,
+        current_best: float = math.inf,
+        best_node: Optional[KDTreePoint] = None,
+    ) -> Tuple[Optional[KDTreePoint], float]:
         if obj != self.point.obj:
             next_tree, other_tree = self._determine_next_subtree(location)
-            local_dist = math.dist(self.point.coord(), location)
+            local_dist = square_dist((self.point.x, self.point.y), location)
             return self._handle_tree(location, obj, next_tree, other_tree, local_dist, current_best, best_node)
         else:
             # If the node we are looking at is the object for which we are searching, we need to make sure to check both
@@ -140,7 +149,7 @@ class KDTree:
         current_best: float,
         best_node: Optional[KDTreePoint],
     ) -> Tuple[Optional[KDTreePoint], float]:
-        if self.point.obj != obj and local_dist < current_best:
+        if local_dist < current_best and self.point.obj != obj:
             return self.point, local_dist
         else:
             return best_node, current_best
@@ -155,14 +164,14 @@ class KDTree:
         current_best: float,
         best_node: Optional[KDTreePoint],
     ) -> Tuple[Optional[KDTreePoint], float]:
-        best_node, current_best = next_tree.find_nearest_neighbour(location, obj, current_best, best_node)
-        if self.point.obj != obj and local_dist < current_best:
+        best_node, current_best = next_tree._find_nearest_neighbour(location, obj, current_best, best_node)
+        if local_dist < current_best and self.point.obj != obj:
             current_best = local_dist
             best_node = self.point
 
         distance_to_plane = abs(location[0] - self.point.x) if self.vertical else abs(location[1] - self.point.y)
-        if distance_to_plane < current_best and other_tree is not None:
-            return other_tree.find_nearest_neighbour(location, obj, current_best, best_node)
+        if distance_to_plane**2 < current_best and other_tree is not None:
+            return other_tree._find_nearest_neighbour(location, obj, current_best, best_node)
         else:
             return best_node, current_best
 
