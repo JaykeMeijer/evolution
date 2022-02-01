@@ -214,9 +214,12 @@ class Beast:
         tail_end = translate(self.position.tuple(), self.rotation - 180, 3 * self.size)
         pygame.draw.line(screen, (0, 0, 0), self.position.tuple(), tail_end, 3)
         if self.selected:
-            pygame.draw.circle(screen, (255, 0, 0), self.position.tuple(), self.size + 3)
+            edge_color = (255, 0, 0)
+            edge_width = 3
         else:
-            pygame.draw.circle(screen, (0, 0, 0), self.position.tuple(), self.size + 1)
+            edge_color = (0, 0, 0)
+            edge_width = 1
+        pygame.draw.circle(screen, edge_color, self.position.tuple(), self.size + edge_width)
         pygame.draw.circle(screen, self.color, self.position.tuple(), self.size)
 
     def _draw_name(self, screen: pygame.surface.Surface):
