@@ -19,6 +19,7 @@ Evolution:
 Simulation:
 - Add controlable speed
 - Toggle button not changing with keypress
+- Replace KDTree implementation with C or Rust version to improve performance
 
 ## Would be cool
 
