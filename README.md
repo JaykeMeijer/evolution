@@ -1,13 +1,28 @@
 # Evolution
 
-Evolution is an evolution simulation. "Beasts" can move around and reproduce, however this takes energy. When the energy of a beast reaches 0, he dies.
+Evolution is an evolution simulation. "Beasts" can move around and reproduce, however this takes energy. When the 
+energy of a beast reaches 0, he dies.
 
-Reproduction mimicks that of real life. Each beast has a genetic code, similar to DNA. When two beasts reproduce, the new beast will be a combination of their
+Reproduction mimicks that of real life. Each beast has a genetic code, similar to DNA. When two beasts reproduce, the 
+new beast will be a combination of their
 genetic code, with possibly some random mutations.
 
 The "brain" of the beasts uses inputs such as distance to others, objects etc, as some kind of basic neural network.
 
 Inspired by / loosely based on https://www.youtube.com/watch?v=N3tRFayqVtk and https://www.youtube.com/watch?v=myJ7YOZGkv0
+
+# Build KDTree implementation
+
+For performance reasons, the KDTree implementation is done in Rust. This requires that this is built.
+For this, make sure you have a Rust environment installed and are able to run `rustc`
+(https://www.rust-lang.org/tools/install).
+
+To compile the KDTree, navigate to `evolution/datastructures/kdtree_rust` and run `maturin develop`. This will compile,
+package and install the `kdtree_rust` library in your currently active Python environment.
+
+If you do not want to use this, you can replace the import statement on line 7 in `evolution/beast/simulate.py` with
+that of the Python implementation found in `evolution/datastructures/kdtree.py`, ie:
+`from evolution.datastructures.kdtree_rust import KDTree, KDTreePoint`
 
 # TODO
 

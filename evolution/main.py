@@ -11,7 +11,7 @@ from evolution.simulation.ui.ui import UI
 from evolution.util.profiling import profileit
 from evolution.world.state import state
 
-NUM_BEASTS = 50
+NUM_BEASTS = 100
 SIMULATION_STEP_TIME = 0.01
 
 pygame.init()

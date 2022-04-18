@@ -175,18 +175,18 @@ class KDTree:
         else:
             return best_node, current_best
 
-    def __str__(self):
-        return self.print()
+    def __str__(self) -> str:
+        return self._print()
 
-    def print(self, tab=0):
+    def _print(self, tab=0) -> str:
         out_lines = []
         tab_str = " " * tab * 2
         out_lines.append(f"{tab_str}+ Subtree point - {self._printable_rect(self.area)} - {self.point}")
 
         if self.left is not None:
-            out_lines.append(f"{tab_str}  L:\n{self.left.print(tab + 1)}")
+            out_lines.append(f"{tab_str}  L:\n{self.left._print(tab + 1)}")
         if self.right is not None:
-            out_lines.append(f"{tab_str}  R:\n{self.right.print(tab + 1)}")
+            out_lines.append(f"{tab_str}  R:\n{self.right._print(tab + 1)}")
 
         return "\n".join(out_lines)
 

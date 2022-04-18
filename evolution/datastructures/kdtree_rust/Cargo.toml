@@ -1,0 +1,13 @@
+[package]
+name = "rust_kdtree"
+version = "0.0.1"
+authors = ["Jayke"]
+description = "KDTree implementation for usage from Python"
+edition = "2018"
+
+[lib]
+name = "rust_kdtree"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.16.4", features = ["extension-module"] }

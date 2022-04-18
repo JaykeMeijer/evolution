@@ -1,5 +1,6 @@
 -r requirements.txt
 black==22.1.0
 isort==5.10.1
+maturin==0.12.12
 pytest==6.2.5
 pytest-pythonpath==0.7.3

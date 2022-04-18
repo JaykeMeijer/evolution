@@ -2,3 +2,5 @@
 *pycache*
 *mypy_cache*
 local/*
+venv_evolution/*
+evolution/datastructures/kdtree_rust/target/*
