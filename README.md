@@ -20,9 +20,8 @@ For this, make sure you have a Rust environment installed and are able to run `r
 To compile the KDTree, navigate to `evolution/datastructures/kdtree_rust` and run `maturin develop`. This will compile,
 package and install the `kdtree_rust` library in your currently active Python environment.
 
-If you do not want to use this, you can replace the import statement on line 7 in `evolution/beast/simulate.py` with
-that of the Python implementation found in `evolution/datastructures/kdtree.py`, ie:
-`from evolution.datastructures.kdtree_rust import KDTree, KDTreePoint`
+If you have not done this, the program will automatically fall back to the Python implementation, at a performance
+penalty.
 
 # TODO
 
